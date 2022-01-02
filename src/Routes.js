@@ -16,8 +16,8 @@ import ManageEvents from "./pages/admin/ManageEvents"
 
 export default class Routes extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             title: "",
@@ -58,7 +58,7 @@ export default class Routes extends React.Component {
         })
     }
 
-    updateTitle = (title) => {
+    updateTitle(title){
         this.setState({title});
     }
 

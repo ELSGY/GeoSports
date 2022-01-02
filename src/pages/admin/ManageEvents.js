@@ -1,6 +1,6 @@
 import React from 'react';
 
-class ManageEvents extends React.Component {
+export default class ManageEvents extends React.Component {
 
     constructor(props) {
         super(props);
@@ -29,12 +29,10 @@ class ManageEvents extends React.Component {
             <div className="background">
 
                 <div className="main">
-
+                    <div className="activities">
+                    </div>
                 </div>
             </div>
         );
     }
-
 }
-
-export default ManageEvents;

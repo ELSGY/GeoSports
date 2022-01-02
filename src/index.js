@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AdminMenu from "./pages/admin/AdminMenu";
 import AddEvents from "./pages/admin/AddEvents";
-import SignIn from "./pages/authentication/SignIn";
-import LogIn from "./pages/authentication/LogIn";
+import Search from "./pages/admin/Search";
+import ManageEvents from "./pages/admin/ManageEvents";
 
-ReactDOM.render(<AddEvents/>, document.getElementById("root"));
+ReactDOM.render(<ManageEvents/>, document.getElementById("root"));

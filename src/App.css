@@ -83,7 +83,7 @@
     background: white;
 }
 
-.background-signin{
+.background-signin {
     height: 721px;
     width: 1536px;
     background-image: url("images/background.jpg");
@@ -103,10 +103,57 @@ input[type=text] {
     background-color: #f1f1f1;
 }
 
-input[type=text]:focus {
+input[type=date] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+}
+
+input[type=number] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+}
+
+input[type=submit] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    background-color: rgb(0, 212, 212);
+}
+
+input[type=time] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+}
+
+/*hover*/
+input[type=submit]:hover {
     border: 3px solid #555;
     width: 100%;
 }
+
+/*focus*/
+/*input[type=text]:focus {*/
+/*    border: 3px solid #555;*/
+/*    width: 100%;*/
+/*}*/
 
 .category {
     width: 100%;
@@ -124,3 +171,5 @@ input[type=text]:focus {
     width: 250px;
     background-color: #2F4050;
 }
+
+/*Manage activities*/
