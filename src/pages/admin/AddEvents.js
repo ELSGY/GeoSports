@@ -3,8 +3,9 @@ import '../../App.css';
 import {withGoogleMap, GoogleMap, withScriptjs, InfoWindow, Marker} from "react-google-maps";
 import Geocode from "react-geocode";
 import Autocomplete from 'react-google-autocomplete';
-import Navbar from "../../components/Navbar";
+import SearchBar from "../../components/SearchBar";
 import API from "../../API";
+import dateFormat, { masks } from "dateformat";
 
 Geocode["setApiKey"]("AIzaSyC9-oir9k71wA2xOmZD9d-UNe_2e5Gmtqw");
 Geocode["enableDebug"]();
@@ -315,6 +316,12 @@ export default class AddEvents extends React.Component {
     }
 
     updateDate(event) {
+
+        const now = new Date(event.target.value);
+        masks.hammerTime = 'yyyy-mm-dd';
+        const date = dateFormat(now, "hammerTime");
+        console.log(date)
+
         this.setState({
             event: {
                 name: this.state.event.name,
@@ -430,7 +437,7 @@ export default class AddEvents extends React.Component {
 
         return (
             <div className="background">
-                {/*<Navbar/>*/}
+                {/*<SearchBar/>*/}
                 <div className="main">
                     <form onSubmit={this.addEvent}>
                         <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000}}>

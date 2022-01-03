@@ -145,8 +145,7 @@ input[type=time] {
 
 /*hover*/
 input[type=submit]:hover {
-    border: 3px solid #555;
-    width: 100%;
+    background-color: #f1f1f1;
 }
 
 /*focus*/
@@ -173,3 +172,18 @@ input[type=submit]:hover {
 }
 
 /*Manage activities*/
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
