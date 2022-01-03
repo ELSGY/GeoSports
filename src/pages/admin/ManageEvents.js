@@ -88,6 +88,7 @@ export default class ManageEvents extends React.Component {
                 <div className="main">
                     <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000}}>
                         <table>
+
                             <thead>
                             <tr>
                                 <th>Name</th>
@@ -100,30 +101,32 @@ export default class ManageEvents extends React.Component {
                             </tr>
                             {
                                 this.state.activities.map((obj, index) => {
-                                    return (<tr key={index}>
-                                        <td>
-                                            <input type="text" id={index} value={obj["name"]}
-                                                   onChange={this.updateName}/>
-                                        </td>
-                                        {/*<td>{obj["category"]}</td>*/}
-                                        {/*<td>{obj["subcategory"]}</td>*/}
-                                        <td>
-                                            <input type="date" id={index} value={obj["date"]}
-                                                   onChange={this.updateDate}/>
-                                        </td>
-                                        <td>
-                                            <input type="time" id={index} value={obj["time"]}
-                                                   onChange={this.updateTime}/>
-                                        </td>
-                                        <td>
-                                            <input type="number" id={index} value={obj["avbPlaces"]}
-                                                   onChange={this.updateParticipants}/>
-                                        </td>
-                                        <td>
-                                            <input type="submit" id={index} value="Update"
-                                                   onChange={this.updateParticipants}/>
-                                        </td>
-                                    </tr>)
+                                    return (
+                                        <tr key={index}>
+                                            <td>
+                                                <input type="text" id={index} value={obj["name"]}
+                                                       onChange={this.updateName}/>
+                                            </td>
+                                            {/*<td>{obj["category"]}</td>*/}
+                                            {/*<td>{obj["subcategory"]}</td>*/}
+                                            <td>
+                                                <input type="date" id={index} value={obj["date"]}
+                                                       onChange={this.updateDate}/>
+                                            </td>
+                                            <td>
+                                                <input type="time" id={index} value={obj["time"]}
+                                                       onChange={this.updateTime}/>
+                                            </td>
+                                            <td>
+                                                <input type="number" id={index} value={obj["avbPlaces"]}
+                                                       onChange={this.updateParticipants}/>
+                                            </td>
+                                            <td>
+                                                <input type="submit" id={index} value="Update"
+                                                       onChange={this.updateParticipants}/>
+                                            </td>
+                                        </tr>
+                                    )
                                 })
                             }
                             </thead>

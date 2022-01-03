@@ -1,5 +1,4 @@
 import React from 'react';
-import {Navbar, NavDropdown, Form, FormControl, Button, Nav} from 'react-bootstrap'
 import {
     BrowserRouter as Router,
     Switch,
@@ -13,8 +12,9 @@ import ManageEvents from "../pages/admin/ManageEvents";
 import AddEvents from "../pages/admin/AddEvents";
 import Search from "../pages/admin/Search";
 import SignIn from "../pages/authentication/SignIn";
+import LogIn from "../pages/authentication/LogIn";
 
-export default class SearchBar extends React.Component {
+export default class AdminSearchBar extends React.Component {
     render() {
         return (
             <Router>
@@ -34,7 +34,7 @@ export default class SearchBar extends React.Component {
                     </ul>
                 </nav>
                 <Switch>
-                    <Route path="/home">
+                    <Route path="/manageEvents">
                         <ManageEvents/>
                     </Route>
                     <Route path="/addEvents">
@@ -44,7 +44,7 @@ export default class SearchBar extends React.Component {
                         <Search/>
                     </Route>
                     <Route path="/signOut">
-                        <SignIn/>
+                        <LogIn/>
                     </Route>
                 </Switch>
             </Router>

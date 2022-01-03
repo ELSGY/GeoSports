@@ -3,9 +3,8 @@ import '../../App.css';
 import {withGoogleMap, GoogleMap, withScriptjs, InfoWindow, Marker} from "react-google-maps";
 import Geocode from "react-geocode";
 import Autocomplete from 'react-google-autocomplete';
-import SearchBar from "../../components/SearchBar";
 import API from "../../API";
-import dateFormat, { masks } from "dateformat";
+import dateFormat, {masks} from "dateformat";
 
 Geocode["setApiKey"]("AIzaSyC9-oir9k71wA2xOmZD9d-UNe_2e5Gmtqw");
 Geocode["enableDebug"]();
@@ -36,33 +35,17 @@ export default class AddEvents extends React.Component {
                 address: '',
                 latitude: 0,
                 longitude: 0,
-                category: 0,
-                subcategory: 0,
+                category: 1,
+                subcategory: 3,
                 participants: 0,
                 date: '',
                 time: ''
             },
             categories: [
                 {
-                    category: "Land Sports",
+                    category: "No set",
                     subcategories: [
-                        "Climbing",
-                        "Trekking",
-                        "Hiking"
-                    ]
-                },
-                {
-                    category: "Water Sports",
-                    subcategories: [
-                        "Kitesurfing",
-                        "Rafting"
-                    ]
-                },
-                {
-                    category: "Aero Sports",
-                    subcategories: [
-                        "Ski Jumping",
-                        "Bungee Jumping"
+                        "No set"
                     ]
                 }]
         }
@@ -125,24 +108,18 @@ export default class AddEvents extends React.Component {
 
         const url = "/categories/categoriesMap";
 
-        // API.get(url)
-        //     .then(res => this.buildCategories(res))
-        //     .catch(error => {
-        //         console.log(error)
-        //     });
-        fetch("http://localhost:8080/categories/categoriesMap")
-            .then(res => res.json())
-            .then(res => this.buildCategories(res));
-
-        // console.log(this.state.categories);
+        API.get(url)
+            .then(res => this.buildCategories(res))
+            .catch(error => {
+                console.log(error)
+            });
     };
 
     buildCategories(response) {
-
         const categories = [];
-
+        // console.log(response)
         //fetch categories
-        response.forEach(obj => {
+        response.data.forEach(obj => {
             categories.push({
                 category: obj["category"],
                 subcategories: obj["subcategories"]
@@ -150,7 +127,7 @@ export default class AddEvents extends React.Component {
         });
 
         this.setState({categories: categories});
-        console.log(this.state.categories);
+        // console.log(this.state.categories);
     }
 
     getCity(addressArray) {
@@ -308,7 +285,7 @@ export default class AddEvents extends React.Component {
                 category: this.state.event.category,
                 subcategory: this.state.event.subcategory,
                 address: this.state.address,
-                participants: event.target.value,
+                participants: parseInt(event.target.value),
                 date: this.state.event.date,
                 time: this.state.event.time
             }
@@ -316,11 +293,10 @@ export default class AddEvents extends React.Component {
     }
 
     updateDate(event) {
-
         const now = new Date(event.target.value);
         masks.hammerTime = 'yyyy-mm-dd';
         const date = dateFormat(now, "hammerTime");
-        console.log(date)
+        // console.log(date)
 
         this.setState({
             event: {
@@ -331,13 +307,14 @@ export default class AddEvents extends React.Component {
                 subcategory: this.state.event.subcategory,
                 address: this.state.address,
                 participants: this.state.event.participants,
-                date: event.target.value,
+                date: date,
                 time: this.state.event.time
             }
         });
     }
 
     updateTime(event) {
+        // console.log(event.target.value)
         this.setState({
             event: {
                 name: this.state.event.name,
@@ -354,34 +331,28 @@ export default class AddEvents extends React.Component {
         });
     }
 
-    addEvent() {
+    addEvent(event) {
+        // event.preventDefault()
+        const activity = {
+            name: this.state.event.name,
+            latitude: this.state.markerPosition.lat,
+            longitude: this.state.markerPosition.lng,
+            avbPlaces: parseInt(this.state.event.participants),
+            idCat: this.state.event.category,
+            idSubcat: this.state.event.subcategory,
+            address: this.state.address,
+            date: this.state.event.date,
+            time: this.state.event.time
+        }
+
+        console.log(activity)
 
         const url = "/activity/insertActivity";
-        const event = [{
-            "name": this.state.event.name,
-            "latitude": this.state.markerPosition.lat,
-            "longitude": this.state.markerPosition.lng,
-            "avbPlaces": this.state.event.participants,
-            "idCat": this.state.event.category,
-            "idSubcat": this.state.event.subcategory,
-            "address": this.state.address,
-            "date": this.state.event.date,
-            "time": this.state.event.time
-        }]
-
-        // API.post(url, JSON.stringify(event))
-        //     .then(response => console.log(response))
-        //     .catch(error => {
-        //         console.log(error)
-        //     });
-
-        fetch("http://localhost:8080/activity/insertActivity", {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: "POST",
-            body: JSON.stringify(event)
-        }).then(() => alert(JSON.stringify(event)));
+        API.post(url, activity)
+            .then(() => alert("Event " + this.state.event.name + " was added!"))
+            .catch(error => {
+                console.log(error)
+            });
     }
 
     render() {
@@ -414,22 +385,22 @@ export default class AddEvents extends React.Component {
                         </InfoWindow>
                         <Marker/>
 
-                        {/* For Auto complete Search Box */}
-                        {/*<Autocomplete className="input"*/}
-                        {/*              style={{*/}
-                        {/*                  width: '100%',*/}
-                        {/*                  height: '40px',*/}
-                        {/*                  paddingLeft: '16px',*/}
-                        {/*                  marginTop: '5px',*/}
-                        {/*                  marginBottom: '2rem',*/}
-                        {/*                  border: 'none',*/}
-                        {/*                  borderRadius: '4px',*/}
-                        {/*                  backgroundColor: '#f1f1f1'*/}
-                        {/*              }}*/}
-                        {/*              placeholder={"Change current location"}*/}
-                        {/*              onPlaceSelected={this.onPlaceSelected}*/}
-                        {/*              types={['(regions)']}*/}
-                        {/*/>*/}
+                        {/*For Auto complete Search Box*/}
+                        <Autocomplete className="input"
+                                      style={{
+                                          width: '100%',
+                                          height: '40px',
+                                          paddingLeft: '16px',
+                                          marginTop: '5px',
+                                          marginBottom: '2rem',
+                                          border: 'none',
+                                          borderRadius: '4px',
+                                          backgroundColor: '#f1f1f1'
+                                      }}
+                                      placeholder={"Change current location"}
+                                      onPlaceSelected={this.onPlaceSelected}
+                                      types={['(regions)']}
+                        />
                     </GoogleMap>
                 )
             )
@@ -437,14 +408,14 @@ export default class AddEvents extends React.Component {
 
         return (
             <div className="background">
-                {/*<SearchBar/>*/}
+                {/*<AdminSearchBar/>*/}
                 <div className="main">
                     <form onSubmit={this.addEvent}>
                         <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000}}>
                             <div className="input">
                                 <label htmlFor="eventName">Name</label>
                                 <input type="text" name="name" id="name" placeholder="type..."
-                                       onChange={this.updateName}/>
+                                       onChange={this.updateName} required/>
                             </div>
                             <div className="input">
                                 <label htmlFor="eventCategory">Category</label>
@@ -465,35 +436,35 @@ export default class AddEvents extends React.Component {
                             <div className="input">
                                 <label htmlFor="address">Address</label>
                                 <input type="text" name="name" id="name" value={this.state.address}
-                                       onChange={this.updateAddress}/>
+                                       onChange={this.updateAddress} required/>
                             </div>
                             <div className="input">
                                 <label htmlFor="date">Date</label>
-                                <input type="date" name="name" id="name" onChange={this.updateDate}/>
+                                <input type="date" name="name" id="name" onChange={this.updateDate} required/>
                             </div>
                             <div className="input">
                                 <label htmlFor="date">Time</label>
-                                <input type="time" name="name" id="name" onChange={this.updateTime}/>
+                                <input type="time" name="name" id="name" onChange={this.updateTime} required/>
                             </div>
                             <div className="input">
                                 <label htmlFor="nop">Number of participants</label>
-                                <input type="number" name="name" id="name" onChange={this.updateParticipants}/>
+                                <input type="number" name="name" id="name" onChange={this.updateParticipants} required/>
                             </div>
                             <div className="input">
                                 <input type="submit" name="name" id="name" value="Add Event"/>
                             </div>
-                            {/*<AsyncMap*/}
-                            {/*    googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${this.state.API_key}&libraries=places`}*/}
-                            {/*    loadingElement={*/}
-                            {/*        <div style={{height: `100%`}}/>*/}
-                            {/*    }*/}
-                            {/*    containerElement={*/}
-                            {/*        <div style={{height: this.state.height}}/>*/}
-                            {/*    }*/}
-                            {/*    mapElement={*/}
-                            {/*        <div style={{height: `100%`}}/>*/}
-                            {/*    }*/}
-                            {/*/>*/}
+                            <AsyncMap
+                                googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${this.state.API_key}&libraries=places`}
+                                loadingElement={
+                                    <div style={{height: `100%`}}/>
+                                }
+                                containerElement={
+                                    <div style={{height: this.state.height}}/>
+                                }
+                                mapElement={
+                                    <div style={{height: `100%`}}/>
+                                }
+                            />
                         </div>
                     </form>
                 </div>

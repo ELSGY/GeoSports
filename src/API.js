@@ -4,6 +4,7 @@ const headers = new Headers();
 headers.append("Access-Control-Allow-Methods", "DELETE, POST, GET");
 headers.append("Access-Control-Allow-Origin", "*");
 headers.append("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+headers.append("Content-Type", "application/json");
 
 export default axios.create({
     baseURL: "http://localhost:8080",
