@@ -7,11 +7,11 @@
 
 /*SingIn and Register*/
 .box {
-    height: 721px;
+    height: auto;
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 10px;
     box-shadow: 0 15px 25px rgba(0, 0, 0, 0.8);
-    margin: auto auto;
+    margin: 32px auto;
     padding: 40px;
     position: absolute;
     top: 50%;
@@ -87,8 +87,8 @@
 }
 
 .background-signin {
-    height: 721px;
-    width: 1536px;
+    height: 1080px;
+    width: 100%;
     background-image: url("images/background.jpg");
     background-repeat: no-repeat, repeat;
     background-position: center; /* Center the image */
@@ -195,4 +195,13 @@ td, th {
 
 tr:nth-child(even) {
     background-color: #dddddd;
+}
+
+/*REGISTER PHOTO*/
+.video{
+    width: 250px;
+    height: 250px;
+    border: #1b1919 solid;
+    align-content: center;
+    display: flex;
 }

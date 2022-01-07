@@ -1,56 +1,213 @@
 import React from 'react';
 import '../../App.css';
+import Webcam from "react-webcam";
+import {message} from "antd";
+import API from "../../API";
+
+const CryptoJS = require("crypto-js")
 
 export default class SignIn extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            client: {
+                name: '',
+                username: '',
+                email: '',
+                password: '',
+                photo: '',
+                isAdmin: false
+            },
+            webcamRef: React.createRef(),
+            webcamActive: false
+        }
+        this.updateName = this.updateName.bind(this);
+        this.updateUsername = this.updateUsername.bind(this);
+        this.updateEmail = this.updateEmail.bind(this);
+        this.updatePassword = this.updatePassword.bind(this);
+        this.registerUser = this.registerUser.bind(this);
+        this.encryptPassword = this.encryptPassword.bind(this);
+        this.takePhoto = this.takePhoto.bind(this);
+        this.activateCamera = this.activateCamera.bind(this);
+    }
+
+    updateName(event) {
+        this.setState({
+            client: {
+                name: event.target.value,
+                username: this.state.client.username,
+                email: this.state.client.email,
+                password: this.state.client.password,
+                photo: this.state.client.photo,
+                isAdmin: this.state.client.isAdmin,
+            }
+        });
+    }
+
+    updateUsername(event) {
+        this.setState({
+            client: {
+                name: this.state.client.name,
+                username: event.target.value,
+                email: this.state.client.email,
+                password: this.state.client.password,
+                photo: this.state.client.photo,
+                isAdmin: this.state.client.isAdmin
+            }
+        });
+    }
+
+    updateEmail(event) {
+        this.setState({
+            client: {
+                name: this.state.client.name,
+                username: this.state.client.username,
+                email: event.target.value,
+                password: this.state.client.password,
+                photo: this.state.client.photo,
+                isAdmin: this.state.client.isAdmin
+            }
+        });
+    }
+
+    updatePassword(event) {
+        this.setState({
+            client: {
+                name: this.state.client.name,
+                username: this.state.client.username,
+                email: this.state.client.email,
+                password: event.target.value,
+                photo: this.state.client.photo,
+                isAdmin: this.state.client.isAdmin
+            }
+        });
+    }
+
+    registerUser() {
+        const encryptedPassword = this.encryptPassword()
+
+        const urlInsert = "/user/insertUser";
+
+        const user = {
+            full_name: this.state.client.name,
+            username: this.state.client.username,
+            email: this.state.client.email,
+            password: encryptedPassword,
+            photo: this.state.client.photo,
+            isAdmin: this.state.client.isAdmin
+        }
+
+        // console.log(user)
+
+        this.setCookie().then(() => console.warn("Cookie is set up..."))
+
+        API.post(urlInsert, user)
+            .catch(error => {
+                console.log(error)
+            });
+
+        fetch("http://localhost:8080/mail/welcome/" + this.state.client.email + "/" + this.state.client.name)
+            .catch(error => {
+                console.log(error)
+            });
+        alert("Your account was created!")
+    }
+
+    encryptPassword() {
+        return CryptoJS["AES"].encrypt("PASSWORD", this.state.client.password).toString()
+    }
+
+    async setCookie() {
+        // set cookie from config file
+        const clientCookie = {
+            username: this.state.client.username,
+            email: this.state.client.email
+        }
+        await sessionStorage.setItem("clientCookie", JSON.stringify(clientCookie));
+    }
+
+    async takePhoto(event) {
+        event.preventDefault()
+        const image = this.state.webcamRef.current.getScreenshot();
+        // console.log(image)
+        await this.setState({
+            client: {
+                name: this.state.client.name,
+                username: this.state.client.username,
+                email: this.state.client.email,
+                password: this.state.client.password,
+                photo: image,
+                isAdmin: this.state.client.isAdmin
+            }
+        });
+        // console.log(this.state.client)
+        alert("Photo taken!")
+    }
+
+    activateCamera() {
+        this.setState({
+            webcamActive: true
+        })
     }
 
     render() {
+        const videoConstraints = {
+            facingMode: "client"
+        };
         return (
             <div className="background-signin">
-
                 <main className="box">
                     <h2>Register</h2>
                     <form>
                         <div className="inputBox">
                             <label htmlFor="userName">Name</label>
-                            <input type="text" name="name" id="name" placeholder="type your username" required/>
+                            <input type="text" name="name" id="name" placeholder="type your username"
+                                   onChange={this.updateName}
+                                   required/>
                         </div>
                         <div className="inputBox">
                             <label htmlFor="username">Username</label>
                             <input type="text" name="userName" id="userName" placeholder="type your username"
+                                   onChange={this.updateUsername}
                                    required/>
                         </div>
                         <div className="inputBox">
                             <label htmlFor="email">Email</label>
                             <input type="email" name="userEmail" id="userEmail" placeholder="type your email"
+                                   onChange={this.updateEmail}
                                    required/>
                         </div>
                         <div className="inputBox">
                             <label htmlFor="userPassword">Password</label>
                             <input type="password" name="userPassword" id="userPassword"
                                    placeholder="type your password"
+                                   onChange={this.updatePassword}
                                    required/>
                         </div>
-                        <div className="inputBox">
-                            <label htmlFor="userConfirmPassword">Confirm Password</label>
-                            <input type="password" name="userPassword" id="userConfirmPassword"
-                                   placeholder="confirm your password"
-                                   required/>
-                        </div>
-                        <div className="inputBox">
-                            <label htmlFor="photo">Smile for us :)</label>
-                            <input type="blob" name="userPhoto"
-                                   placeholder="your photo"
-                                   required/>
-                        </div>
-                        <button type="submit" name="" style={{float: "left"}}>Submit</button>
-                        {/*<Link className="button" to="/login" style={{ float: "left" }}>Login</Link>*/}
+                        {this.state.webcamActive ?
+                            <div className="inputBox">
+                                <label htmlFor="videoDiv">Take a photo</label>
+                                (
+                                <div>
+                                    <Webcam className="video" width={250} height={250}
+                                            videoConstraints={videoConstraints}
+                                            ref={this.state.webcamRef} screenshotFormat="image/jpeg"/>
+                                    <button type="submit" name="userPhoto" placeholder="your photo"
+                                            onClick={this.takePhoto}>Take photo
+                                    </button>
+                                </div>
+                                )
+                            </div>
+                            :
+                            <button type="submit" name="userPhoto" placeholder="your photo"
+                                    onClick={this.activateCamera}>Upload photo</button>
+                        }
+                        <button type="submit" name="" style={{float: "left"}} onClick={this.registerUser}>Register me
+                        </button>
                     </form>
                 </main>
-
             </div>
         );
     }

@@ -34,76 +34,75 @@ export default class SeeEvents extends React.Component {
         this.sendEnrolledEmail = this.sendEnrolledEmail.bind(this);
         this.setCookie = this.setCookie.bind(this);
         this.getCookie = this.getCookie.bind(this);
+        this.fetchDefaultActivities = this.fetchDefaultActivities.bind(this)
 
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/activity/allActivities")
-            .then(res => res.json())
-            .then(res => this.buildActivities(res));
-
-        this.setCookie();
-        this.getCookie();
+        this.setCookie().catch(e => console.log(e));
+        this.getCookie().catch(e => console.log(e));
+        this.fetchDefaultActivities().catch(e => console.log(e))
     }
 
-    getCookie() {
-        // get cookie from sessionStorage
-        const cookie = JSON.parse(sessionStorage.getItem("clientCookie"))
+    async fetchDefaultActivities() {
+        await fetch("http://localhost:8080/activity/getDefaultActivitiesForUser/Flavi23")
+            .then(res => res.json())
+            // .then(res => console.log(res))
+        .then(res => this.buildActivities(res));
+    }
 
-        this.setState({
+    async getCookie() {
+        // get cookie from sessionStorage
+        const clientCookie = await sessionStorage.getItem("clientCookie");
+        const cookie = JSON.parse(clientCookie)
+
+        await this.setState({
             client: {
                 username: cookie.username,
                 email: cookie.email,
             }
         })
 
-        console.log(cookie)
+        console.log(this.state.client.username)
     }
 
-    setCookie() {
+    async setCookie() {
         // set cookie from config file
         const clientCookie = {
             username: login.username,
             email: login.email
         }
-        sessionStorage.setItem("clientCookie", JSON.stringify(clientCookie));
+        await sessionStorage.setItem("clientCookie", JSON.stringify(clientCookie));
     }
 
     buildActivities(response) {
-
-        const activities = []
-        response.forEach(obj => {
-
-            const activity = {
-                id: obj.id,
-                name: obj.name,
-                latitude: obj.lat,
-                longitude: obj.lng,
-                avbPlaces: obj.avbPlaces,
-                category: obj.category,
-                subcategory: obj.subcategory,
-                address: obj.address,
-                participants: obj.participants,
-                date: obj.date,
-                time: obj.time,
-                attending: 0
-            }
-            activities.push(activity);
-        });
+        console.log(response);
 
         this.setState({
-            activities: activities
+            activities: response
         })
-        console.log(this.state.activities);
     }
 
-    async sendEnrolledEmail() {
-        alert(this.state.client.username)
-        // await fetch("http://localhost:8080/mail/" + this.state.client.email + "/" + this.state.client.username + "/" + this.state.client.attending)
-        //     .then(() => alert("You've been enrolled!"))
-        //     .catch(error => {
-        //         console.log(error)
-        //     });
+    async sendEnrolledEmail(event) {
+
+        const activityId = event.target.id
+        await this.setState({
+            client: {
+                email: this.state.client.email,
+                username: this.state.client.username,
+                attending: this.state.activities[activityId]["name"]
+            }
+        })
+        // console.log(this.state.client.email)
+        // console.log(this.state.client.username)
+        // console.log(this.state.client.attending)
+
+        await fetch("http://localhost:8080/mail/" + this.state.client.email + "/" + this.state.client.username + "/" + this.state.client.attending)
+            .then(() => alert("You've been enrolled!"))
+            .catch(error => {
+                console.log(error)
+            });
+
     }
 
     getActivityById(id) {
