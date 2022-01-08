@@ -413,12 +413,12 @@ export default class AddEvents extends React.Component {
                     <form onSubmit={this.addEvent}>
                         <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000}}>
                             <div className="input">
-                                <label htmlFor="eventName">Name</label>
+                                <label htmlFor="eventName"><a className={"required"}>*</a>Name</label>
                                 <input type="text" name="name" id="name" placeholder="type..."
                                        onChange={this.updateName} required/>
                             </div>
                             <div className="input">
-                                <label htmlFor="eventCategory">Category</label>
+                                <label htmlFor="eventCategory"><a className={"required"}>*</a>Category</label>
                                 <select className="category" id="Event Type" placeholder="Choose category"
                                         onChange={this.updateCategory} required>
                                     {
@@ -434,20 +434,21 @@ export default class AddEvents extends React.Component {
                                 </select>
                             </div>
                             <div className="input">
-                                <label htmlFor="address">Address</label>
-                                <input type="text" name="name" id="name" value={this.state.address}
+                                <label htmlFor="address"><a className={"required"}>*</a>Address</label>
+                                <input type="text" name="name" id="name" value={this.state.address} readOnly
                                        onChange={this.updateAddress} required/>
                             </div>
                             <div className="input">
-                                <label htmlFor="date">Date</label>
-                                <input type="date" name="name" id="name" onChange={this.updateDate} required/>
+                                <label htmlFor="date"><a className={"required"}>*</a>Date</label>
+                                <input type="date" name="name" id="name"
+                                       onChange={this.updateDate} required/>
                             </div>
                             <div className="input">
-                                <label htmlFor="date">Time</label>
+                                <label htmlFor="date"><a className={"required"}>*</a>Time</label>
                                 <input type="time" name="name" id="name" onChange={this.updateTime} required/>
                             </div>
                             <div className="input">
-                                <label htmlFor="nop">Number of participants</label>
+                                <label htmlFor="nop"><a className={"required"}>*</a>Number of participants</label>
                                 <input type="number" name="name" id="name" onChange={this.updateParticipants} required/>
                             </div>
                             <div className="input">

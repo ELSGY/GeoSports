@@ -23,12 +23,12 @@ export default class LogIn extends React.Component {
         this.updatePassword = this.updatePassword.bind(this);
         this.decryptPassword = this.decryptPassword.bind(this);
         this.updateUsername = this.updateUsername.bind(this);
-        this.getUserByUsername = this.getUserByUsername.bind(this);
+        this.loginUser = this.loginUser.bind(this);
         this.setUser = this.setUser.bind(this);
         this.setCookie = this.setCookie.bind(this);
     }
 
-    async getUserByUsername(event) {
+    async loginUser(event) {
         event.preventDefault()
         await fetch("http://localhost:8080/user/getUserByUsername/" + this.state.client.username)
             .then(r => r.json())
@@ -41,7 +41,7 @@ export default class LogIn extends React.Component {
     async setUser(user) {
         const decryptedPassword = await this.decryptPassword(user["password"]);
         const username = user["username"];
-        console.log(user)
+
         if (this.state.client.password === decryptedPassword && this.state.client.username === username) {
             if (user["isAdmin"] === true) {
                 this.setState({
@@ -54,7 +54,7 @@ export default class LogIn extends React.Component {
                 });
                 console.warn("Admin is logging in...");
             }
-            console.warn("Login successfully...")
+
             await this.setState({
                 client: {
                     name: user["name"],
@@ -82,10 +82,8 @@ export default class LogIn extends React.Component {
         await sessionStorage.setItem("clientCookie", JSON.stringify(clientCookie));
     }
 
-    updateUsername(event) {
-        // console.log(event.target.value)
-
-        this.setState({
+    async updateUsername(event) {
+        await this.setState({
             client: {
                 name: this.state.client.name,
                 username: event.target.value,
@@ -97,10 +95,8 @@ export default class LogIn extends React.Component {
         });
     }
 
-    updatePassword(event) {
-        // console.log(event.target.value)
-
-        this.setState({
+    async updatePassword(event) {
+        await this.setState({
             client: {
                 name: this.state.client.name,
                 username: this.state.client.username,
@@ -125,29 +121,29 @@ export default class LogIn extends React.Component {
                             <h2>Login</h2>
                             <form>
                                 <div className="inputBox">
-                                    <label htmlFor="userName">Username</label>
+                                    <label htmlFor="userName"><a className={"required"}>*</a>Username</label>
                                     <input type="text" name="userName" id="userName" placeholder="type your username"
                                            onChange={this.updateUsername}
                                            required/>
                                 </div>
                                 <div className="inputBox">
-                                    <label htmlFor="userPassword">Password</label>
+                                    <label htmlFor="userPassword"><a className={"required"}>*</a>Password</label>
                                     <input type="password" name="userPassword" id="userPassword"
                                            placeholder="type your password"
                                            onChange={this.updatePassword}
                                            required/>
                                 </div>
-                                <div>
+                                <div className="loginButton">
                                     <Link to={this.state.path}>
-                                        <button type="submit" name="" style={{float: "left"}}
-                                                onClick={this.getUserByUsername}>Login
+                                        <button type="submit" name="loginButton"
+                                                onClick={this.loginUser}>Login
                                         </button>
                                     </Link>
                                 </div>
                             </form>
                             <div>
                                 <p className="signup">Don't have an account?</p>
-                                <Link to="/signup"><p className="login">SIGN UP</p></Link>
+                                <Link className={"linkButton"} to="/signup"><p className="login">SIGN UP</p></Link>
                             </div>
                         </main>
                     </div>

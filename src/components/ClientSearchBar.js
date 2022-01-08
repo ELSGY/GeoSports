@@ -31,7 +31,7 @@ export default class ClientSearchBar extends React.Component {
                     </ul>
                 </nav>
                 <Switch>
-                    <Route path="/seeEvents">
+                    <Route path="/user/seeEvents">
                         <SeeEvents/>
                     </Route>
                     <Route path="/signOut">
@@ -39,7 +39,6 @@ export default class ClientSearchBar extends React.Component {
                     </Route>
                 </Switch>
             </Router>
-
         )
     }
 }

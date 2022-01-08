@@ -1,9 +1,7 @@
 export const adminNavItems = [
     {
         id: 1,
-        title: "Manage Events",
-        path: "/admin",
-        cName: "nav-item"
+        path: "/admin/manageEvents",
     },
     {
         id: 2,

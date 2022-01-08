@@ -37,8 +37,8 @@ export default class SignUp extends React.Component {
         this.activateCamera = this.activateCamera.bind(this);
     }
 
-    updateName(event) {
-        this.setState({
+    async updateName(event) {
+        await this.setState({
             client: {
                 name: event.target.value,
                 username: this.state.client.username,
@@ -50,8 +50,8 @@ export default class SignUp extends React.Component {
         });
     }
 
-    updateUsername(event) {
-        this.setState({
+    async updateUsername(event) {
+        await this.setState({
             client: {
                 name: this.state.client.name,
                 username: event.target.value,
@@ -63,8 +63,8 @@ export default class SignUp extends React.Component {
         });
     }
 
-    updateEmail(event) {
-        this.setState({
+    async updateEmail(event) {
+        await this.setState({
             client: {
                 name: this.state.client.name,
                 username: this.state.client.username,
@@ -76,8 +76,8 @@ export default class SignUp extends React.Component {
         });
     }
 
-    updatePassword(event) {
-        this.setState({
+    async updatePassword(event) {
+        await this.setState({
             client: {
                 name: this.state.client.name,
                 username: this.state.client.username,
@@ -119,8 +119,8 @@ export default class SignUp extends React.Component {
         alert("Your account was created!")
     }
 
-    encryptPassword() {
-        return CryptoJS["AES"].encrypt(this.state.client.password, "PASSWORD").toString()
+    async encryptPassword() {
+        return await CryptoJS["AES"].encrypt(this.state.client.password, "PASSWORD").toString()
     }
 
     async setCookie() {
@@ -146,7 +146,7 @@ export default class SignUp extends React.Component {
                 isAdmin: this.state.client.isAdmin
             }
         });
-        // console.log(this.state.client)
+
         alert("Photo taken!")
     }
 
@@ -164,28 +164,28 @@ export default class SignUp extends React.Component {
             <Route>
                 <div className="background-signin">
                     <main className="box">
-                        <h2>Register</h2>
+                        <h2>Create account</h2>
                         <form onSubmit={this.registerUser}>
                             <div className="inputBox">
-                                <label htmlFor="userName">Name</label>
+                                <label htmlFor="userName"><a className={"required"}>*</a>Name</label>
                                 <input type="text" name="name" id="name" placeholder="type your username"
                                        onChange={this.updateName}
                                        required/>
                             </div>
                             <div className="inputBox">
-                                <label htmlFor="username">Username</label>
+                                <label htmlFor="username"><a className={"required"}>*</a>Username</label>
                                 <input type="text" name="userName" id="userName" placeholder="type your username"
                                        onChange={this.updateUsername}
                                        required/>
                             </div>
                             <div className="inputBox">
-                                <label htmlFor="email">Email</label>
-                                <input type="email" name="userEmail" id="userEmail" placeholder="type your email"
+                                <label htmlFor="email"><a className={"required"}>*</a>E-mail</label>
+                                <input type="email" name="userEmail" id="userEmail" placeholder="type your e-mail"
                                        onChange={this.updateEmail}
                                        required/>
                             </div>
                             <div className="inputBox">
-                                <label htmlFor="userPassword">Password</label>
+                                <label htmlFor="userPassword"><a className={"required"}>*</a>Password</label>
                                 <input type="password" name="userPassword" id="userPassword"
                                        placeholder="type your password"
                                        onChange={this.updatePassword}
@@ -193,7 +193,7 @@ export default class SignUp extends React.Component {
                             </div>
                             {this.state.webcamActive ?
                                 <div className="inputBox">
-                                    <label htmlFor="videoDiv">Take a photo</label>
+                                    <label htmlFor="videoDiv"><a className={"required"}>*</a>Take a photo</label>
                                     (
                                     <div>
                                         <Webcam className="video" width={250} height={250}
@@ -207,15 +207,16 @@ export default class SignUp extends React.Component {
                                 </div>
                                 :
                                 <button type="submit" name="userPhoto" placeholder="your photo"
-                                        onClick={this.activateCamera}>Upload photo</button>
+                                        onClick={this.activateCamera}><a className={"required"}>*</a>Upload photo
+                                </button>
                             }
-                            <button type="submit" name="" style={{float: "left"}} >Sign Up
+                            <button type="submit" name="" style={{float: "left"}}>Sign Up
                             </button>
                         </form>
                         {!this.state.webcamActive ?
                             <div>
                                 <p className="login">Already have an account?</p>
-                                <Link to="/login"><p className="login">LOG IN</p></Link>
+                                <Link className={"linkButton"} to="/login"><p className="login">LOGIN</p></Link>
                             </div> : null
                         }
                     </main>

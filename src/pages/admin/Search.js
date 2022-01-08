@@ -52,7 +52,7 @@ export default class Search extends React.Component {
                     <form onSubmit={this.fetchClientDetails}>
                         <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000}}>
                             <div className="input">
-                                <label htmlFor="ticketCode">Code</label>
+                                <label htmlFor="ticketCode"><a className={"required"}>*</a>Code</label>
                                 <input type="text" name="Code" id="Code" onChange={this.updateCode}/>
                             </div>
                             <div className="input">

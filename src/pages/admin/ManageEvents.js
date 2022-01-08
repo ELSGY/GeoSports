@@ -96,8 +96,8 @@ export default class ManageEvents extends React.Component {
                                 {/*<th>Subcategory</th>*/}
                                 <th>Date</th>
                                 <th>Time</th>
-                                <th>Avb. places</th>
-                                <th>Action</th>
+                                <th>Available places</th>
+                                {/*<th>Action</th>*/}
                             </tr>
                             {
                                 this.state.activities.map((obj, index) => {
@@ -121,9 +121,9 @@ export default class ManageEvents extends React.Component {
                                                 <input type="number" id={index} value={obj["avbPlaces"]}
                                                        onChange={this.updateParticipants}/>
                                             </td>
-                                            <td>
+                                            <td style={{background: "transparent"}}>
                                                 <input type="submit" id={index} value="Update"
-                                                       onChange={this.updateParticipants}/>
+                                                       onClick={this.updateParticipants}/>
                                             </td>
                                         </tr>
                                     )

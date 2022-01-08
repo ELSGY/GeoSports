@@ -47,8 +47,7 @@ export default class SeeEvents extends React.Component {
     async fetchDefaultActivities() {
         await fetch("http://localhost:8080/activity/getDefaultActivitiesForUser/Flavi23")
             .then(res => res.json())
-            // .then(res => console.log(res))
-        .then(res => this.buildActivities(res));
+            .then(res => this.buildActivities(res));
     }
 
     async getCookie() {
@@ -75,10 +74,10 @@ export default class SeeEvents extends React.Component {
         await sessionStorage.setItem("clientCookie", JSON.stringify(clientCookie));
     }
 
-    buildActivities(response) {
+    async buildActivities(response) {
         console.log(response);
 
-        this.setState({
+        await this.setState({
             activities: response
         })
     }
@@ -93,14 +92,11 @@ export default class SeeEvents extends React.Component {
                 attending: this.state.activities[activityId]["name"]
             }
         })
-        // console.log(this.state.client.email)
-        // console.log(this.state.client.username)
-        // console.log(this.state.client.attending)
 
         await fetch("http://localhost:8080/mail/" + this.state.client.email + "/" + this.state.client.username + "/" + this.state.client.attending)
             .then(() => alert("You've been enrolled!"))
-            .catch(error => {
-                console.log(error)
+            .catch(() => {
+                console.warn("E-mail address could not be found...")
             });
 
     }
@@ -122,8 +118,7 @@ export default class SeeEvents extends React.Component {
                                 <th>Subcategory</th>
                                 <th>Date</th>
                                 <th width="10px">Time</th>
-                                <th>Avb. places</th>
-                                <th>Action</th>
+                                <th>Available places</th>
                             </tr>
                             {
                                 this.state.activities.map((obj, index) => {
@@ -146,10 +141,19 @@ export default class SeeEvents extends React.Component {
                                         <td>
                                             {obj["avbPlaces"]}
                                         </td>
-                                        <td>
-                                            <input type="submit" id={index} value="Enroll"
-                                                   onClick={this.sendEnrolledEmail}/>
-                                        </td>
+                                        {
+                                            obj["avbPlaces"] === 0 ?
+                                                (<td style={{background: "transparent"}}>
+                                                    <input type="submit" id={index} value="Unavailable"
+                                                           style={{background: "rgb(221, 221, 221)"}}/>
+
+                                                </td>)
+                                                : (<td style={{background: "transparent"}}>
+                                                    <input type="submit" id={index} value="Enroll"
+                                                           onClick={this.sendEnrolledEmail}/>
+
+                                                </td>)
+                                        }
                                     </tr>)
                                 })
                             }
