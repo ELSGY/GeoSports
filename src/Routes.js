@@ -58,7 +58,7 @@ export default class Routes extends React.Component {
         })
     }
 
-    updateTitle(title){
+    updateTitle(title) {
         this.setState({title});
     }
 
@@ -155,7 +155,6 @@ export default class Routes extends React.Component {
                         }
                     </ul>
                 </nav>
-
                 <div className="bg-light">
                     <PopupStatus message={this.state.popupStatusMessage} type={this.state.popupStatusType}/>
                     <Switch>

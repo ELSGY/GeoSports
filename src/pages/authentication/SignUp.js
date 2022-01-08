@@ -1,12 +1,16 @@
 import React from 'react';
 import '../../App.css';
 import Webcam from "react-webcam";
-import {message} from "antd";
 import API from "../../API";
+import {
+    Link,
+    Router,
+    Route
+} from "react-router-dom";
 
 const CryptoJS = require("crypto-js")
 
-export default class SignIn extends React.Component {
+export default class SignUp extends React.Component {
 
     constructor(props) {
         super(props);
@@ -116,7 +120,7 @@ export default class SignIn extends React.Component {
     }
 
     encryptPassword() {
-        return CryptoJS["AES"].encrypt("PASSWORD", this.state.client.password).toString()
+        return CryptoJS["AES"].encrypt(this.state.client.password, "PASSWORD").toString()
     }
 
     async setCookie() {
@@ -157,58 +161,66 @@ export default class SignIn extends React.Component {
             facingMode: "client"
         };
         return (
-            <div className="background-signin">
-                <main className="box">
-                    <h2>Register</h2>
-                    <form>
-                        <div className="inputBox">
-                            <label htmlFor="userName">Name</label>
-                            <input type="text" name="name" id="name" placeholder="type your username"
-                                   onChange={this.updateName}
-                                   required/>
-                        </div>
-                        <div className="inputBox">
-                            <label htmlFor="username">Username</label>
-                            <input type="text" name="userName" id="userName" placeholder="type your username"
-                                   onChange={this.updateUsername}
-                                   required/>
-                        </div>
-                        <div className="inputBox">
-                            <label htmlFor="email">Email</label>
-                            <input type="email" name="userEmail" id="userEmail" placeholder="type your email"
-                                   onChange={this.updateEmail}
-                                   required/>
-                        </div>
-                        <div className="inputBox">
-                            <label htmlFor="userPassword">Password</label>
-                            <input type="password" name="userPassword" id="userPassword"
-                                   placeholder="type your password"
-                                   onChange={this.updatePassword}
-                                   required/>
-                        </div>
-                        {this.state.webcamActive ?
+            <Route>
+                <div className="background-signin">
+                    <main className="box">
+                        <h2>Register</h2>
+                        <form onSubmit={this.registerUser}>
                             <div className="inputBox">
-                                <label htmlFor="videoDiv">Take a photo</label>
-                                (
-                                <div>
-                                    <Webcam className="video" width={250} height={250}
-                                            videoConstraints={videoConstraints}
-                                            ref={this.state.webcamRef} screenshotFormat="image/jpeg"/>
-                                    <button type="submit" name="userPhoto" placeholder="your photo"
-                                            onClick={this.takePhoto}>Take photo
-                                    </button>
-                                </div>
-                                )
+                                <label htmlFor="userName">Name</label>
+                                <input type="text" name="name" id="name" placeholder="type your username"
+                                       onChange={this.updateName}
+                                       required/>
                             </div>
-                            :
-                            <button type="submit" name="userPhoto" placeholder="your photo"
-                                    onClick={this.activateCamera}>Upload photo</button>
+                            <div className="inputBox">
+                                <label htmlFor="username">Username</label>
+                                <input type="text" name="userName" id="userName" placeholder="type your username"
+                                       onChange={this.updateUsername}
+                                       required/>
+                            </div>
+                            <div className="inputBox">
+                                <label htmlFor="email">Email</label>
+                                <input type="email" name="userEmail" id="userEmail" placeholder="type your email"
+                                       onChange={this.updateEmail}
+                                       required/>
+                            </div>
+                            <div className="inputBox">
+                                <label htmlFor="userPassword">Password</label>
+                                <input type="password" name="userPassword" id="userPassword"
+                                       placeholder="type your password"
+                                       onChange={this.updatePassword}
+                                       required/>
+                            </div>
+                            {this.state.webcamActive ?
+                                <div className="inputBox">
+                                    <label htmlFor="videoDiv">Take a photo</label>
+                                    (
+                                    <div>
+                                        <Webcam className="video" width={250} height={250}
+                                                videoConstraints={videoConstraints}
+                                                ref={this.state.webcamRef} screenshotFormat="image/jpeg"/>
+                                        <button type="submit" name="userPhoto" placeholder="your photo"
+                                                onClick={this.takePhoto}>Take photo
+                                        </button>
+                                    </div>
+                                    )
+                                </div>
+                                :
+                                <button type="submit" name="userPhoto" placeholder="your photo"
+                                        onClick={this.activateCamera}>Upload photo</button>
+                            }
+                            <button type="submit" name="" style={{float: "left"}} >Sign Up
+                            </button>
+                        </form>
+                        {!this.state.webcamActive ?
+                            <div>
+                                <p className="login">Already have an account?</p>
+                                <Link to="/login"><p className="login">LOG IN</p></Link>
+                            </div> : null
                         }
-                        <button type="submit" name="" style={{float: "left"}} onClick={this.registerUser}>Register me
-                        </button>
-                    </form>
-                </main>
-            </div>
+                    </main>
+                </div>
+            </Route>
         );
     }
 }

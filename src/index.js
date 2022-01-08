@@ -1,12 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AddEvents from "./pages/admin/AddEvents";
-import Search from "./pages/admin/Search";
-import ManageEvents from "./pages/admin/ManageEvents";
+import SignUp from "./pages/authentication/SignUp";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import LogIn from "./pages/authentication/LogIn";
 import AdminSearchBar from "./components/AdminSearchBar";
 import ClientSearchBar from "./components/ClientSearchBar";
-import SeeEvents from "./pages/client/SeeEvents";
-import SignIn from "./pages/authentication/SignIn";
-import LogIn from "./pages/authentication/LogIn";
 
-ReactDOM.render(<SignIn/>, document.getElementById("root"));
+ReactDOM.render(
+    <Router>
+        <Switch>
+            <Route exact path={"/signup"} component={SignUp}/>
+            <Route epath={"/login"} component={LogIn}/>
+            <Route epath={"/admin"} component={AdminSearchBar}/>
+            <Route epath={"/user"} component={ClientSearchBar}/>
+        </Switch>
+    </Router>
+    , document.getElementById("root"));
+
