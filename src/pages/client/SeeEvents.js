@@ -1,5 +1,4 @@
 import React from 'react';
-import {login} from './Cookies'
 
 export default class SeeEvents extends React.Component {
 
@@ -11,6 +10,10 @@ export default class SeeEvents extends React.Component {
                 username: '',
                 email: '',
                 attending: ''
+            },
+            coords: {
+                lat: 0,
+                lng: 0
             },
             activities: [
                 {
@@ -32,27 +35,52 @@ export default class SeeEvents extends React.Component {
         this.buildActivities = this.buildActivities.bind(this);
         this.getActivityById = this.getActivityById.bind(this);
         this.sendEnrolledEmail = this.sendEnrolledEmail.bind(this);
-        this.setCookie = this.setCookie.bind(this);
         this.getCookie = this.getCookie.bind(this);
         this.fetchDefaultActivities = this.fetchDefaultActivities.bind(this)
+        this.setCoords = this.setCoords.bind(this)
 
     }
 
-    componentDidMount() {
-        this.setCookie().catch(e => console.log(e));
-        this.getCookie().catch(e => console.log(e));
-        this.fetchDefaultActivities().catch(e => console.log(e))
+    async componentDidMount() {
+
+        if (navigator.geolocation) {
+            await navigator.geolocation.getCurrentPosition(position => {
+                    this.setState({
+                            coords: {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            }
+                        }, async () => {
+                            await this.getCookie();
+                            await this.fetchDefaultActivities(position.coords.latitude, position.coords.longitude)
+                        }, error => {
+                            console.error(error);
+                        }
+                    )
+                }
+            )
+        }
     }
 
-    async fetchDefaultActivities() {
-        await fetch("http://localhost:8080/activity/getDefaultActivitiesForUser/Flavi23")
+    async setCoords(lat, lng) {
+        await this.setState({
+            coords: {
+                lat: lat,
+                lng: lng
+            }
+        })
+        console.log(this.state.coords)
+    }
+
+    async fetchDefaultActivities(lat, lng) {
+        await fetch("http://localhost:8080/activity/getDefaultActivitiesForUser/" + this.state.client.username + "/" + lat + "/" + lng)
             .then(res => res.json())
             .then(res => this.buildActivities(res));
     }
 
     async getCookie() {
-        // get cookie from sessionStorage
-        const clientCookie = await sessionStorage.getItem("clientCookie");
+        // get cookie from localStorage
+        const clientCookie = await localStorage.getItem("clientCookie");
         const cookie = JSON.parse(clientCookie)
 
         await this.setState({
@@ -62,16 +90,7 @@ export default class SeeEvents extends React.Component {
             }
         })
 
-        console.log(this.state.client.username)
-    }
-
-    async setCookie() {
-        // set cookie from config file
-        const clientCookie = {
-            username: login.username,
-            email: login.email
-        }
-        await sessionStorage.setItem("clientCookie", JSON.stringify(clientCookie));
+        // console.log(this.state.client.username)
     }
 
     async buildActivities(response) {
@@ -98,6 +117,13 @@ export default class SeeEvents extends React.Component {
             .catch(() => {
                 console.warn("E-mail address could not be found...")
             });
+
+        await fetch("http://localhost:8080/activity/userEnrolled/" + this.state.client.attending)
+            .catch(() => {
+                console.warn("Error updating activity...")
+            });
+
+        window.location.reload(true);
 
     }
 

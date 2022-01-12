@@ -331,8 +331,8 @@ export default class AddEvents extends React.Component {
         });
     }
 
-    addEvent(event) {
-        // event.preventDefault()
+    async addEvent() {
+
         const activity = {
             name: this.state.event.name,
             latitude: this.state.markerPosition.lat,
@@ -348,7 +348,7 @@ export default class AddEvents extends React.Component {
         console.log(activity)
 
         const url = "/activity/insertActivity";
-        API.post(url, activity)
+        await API.post(url, activity)
             .then(() => alert("Event " + this.state.event.name + " was added!"))
             .catch(error => {
                 console.log(error)

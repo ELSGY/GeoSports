@@ -1,30 +1,26 @@
 export const adminNavItems = [
     {
         id: 1,
-        path: "/admin/manageEvents",
-    },
-    {
-        id: 2,
         title: "Manage Events",
         path: "/admin/manageEvents",
         cName: "nav-item"
     },
     {
-        id: 3,
+        id: 2,
         title: "Add event",
         path: "/admin/addEvents",
         cName: "nav-item"
     },
     {
-        id: 4,
+        id: 3,
         title: "Search client",
         path: "/admin/searchClient",
         cName: "nav-item"
     },
     {
-        id: 5,
+        id: 4,
         title: "Sign out",
-        path: "/signOut",
+        path: "/",
         cName: "nav-item"
     }
 ]

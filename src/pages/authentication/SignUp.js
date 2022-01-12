@@ -4,7 +4,6 @@ import Webcam from "react-webcam";
 import API from "../../API";
 import {
     Link,
-    Router,
     Route
 } from "react-router-dom";
 
@@ -25,7 +24,8 @@ export default class SignUp extends React.Component {
                 isAdmin: false
             },
             webcamRef: React.createRef(),
-            webcamActive: false
+            webcamActive: false,
+            refreshed: 1
         }
         this.updateName = this.updateName.bind(this);
         this.updateUsername = this.updateUsername.bind(this);
@@ -35,6 +35,19 @@ export default class SignUp extends React.Component {
         this.encryptPassword = this.encryptPassword.bind(this);
         this.takePhoto = this.takePhoto.bind(this);
         this.activateCamera = this.activateCamera.bind(this);
+    }
+
+    async componentDidMount() {
+        function disableBack() {
+            window.history.forward();
+        }
+        setTimeout("disableBack()", 0);
+        window.onunload = null;
+
+        if (localStorage.getItem("clientCookie") !== null) {
+            localStorage.clear();
+            window.location.reload(true);
+        }
     }
 
     async updateName(event) {
@@ -89,7 +102,7 @@ export default class SignUp extends React.Component {
         });
     }
 
-    registerUser() {
+    registerUser(event) {
         const encryptedPassword = this.encryptPassword()
 
         const urlInsert = "/user/insertUser";
@@ -117,10 +130,11 @@ export default class SignUp extends React.Component {
                 console.log(error)
             });
         alert("Your account was created!")
+        this.props.history.push("/user/seeEvents");
     }
 
-    async encryptPassword() {
-        return await CryptoJS["AES"].encrypt(this.state.client.password, "PASSWORD").toString()
+    encryptPassword() {
+        return CryptoJS["AES"].encrypt(this.state.client.password, "PASSWORD").toString()
     }
 
     async setCookie() {
@@ -129,7 +143,7 @@ export default class SignUp extends React.Component {
             username: this.state.client.username,
             email: this.state.client.email
         }
-        await sessionStorage.setItem("clientCookie", JSON.stringify(clientCookie));
+        await localStorage.setItem("clientCookie", JSON.stringify(clientCookie));
     }
 
     async takePhoto(event) {
@@ -207,10 +221,10 @@ export default class SignUp extends React.Component {
                                 </div>
                                 :
                                 <button type="submit" name="userPhoto" placeholder="your photo"
-                                        onClick={this.activateCamera}><a className={"required"}>*</a>Upload photo
+                                        onClick={this.activateCamera}>Upload photo
                                 </button>
                             }
-                            <button type="submit" name="" style={{float: "left"}}>Sign Up
+                            <button type="submit" style={{float: "left"}}>Sign Up
                             </button>
                         </form>
                         {!this.state.webcamActive ?

@@ -10,7 +10,8 @@ export default class Search extends React.Component {
             client: {
                 name: '',
                 username: '',
-                email: ''
+                email: '',
+                photo: ''
             }
         }
 
@@ -27,14 +28,22 @@ export default class Search extends React.Component {
     }
 
     async setDetails(response) {
+
+
+        const image = new Image();
+        image.src = response["photo"];
+        // document.body.appendChild(image);
+        // console.log(image.src)
+
         await this.setState({
             client: {
-                name: response["fullName"],
+                name: response["full_name"],
                 username: response["username"],
-                email: response["email"]
+                email: response["email"],
+                photo: image
             }
         });
-        console.log(this.state.client)
+        // console.log(this.state.client)
     }
 
     async updateCode(event) {
@@ -58,18 +67,26 @@ export default class Search extends React.Component {
                             <div className="input">
                                 <input type="submit" name="name" id="name" value="Search client"/>
                             </div>
+
                             {this.state.client.name && this.state.client.username && this.state.client.email ?
-                                (
-                                    <div className="input">
-                                        <label htmlFor="ticketCode">Name</label>
-                                        <input type="text" name="Name" id="Name" value={this.state.client.name}
-                                               readOnly/>
-                                        <label htmlFor="ticketCode">Username</label>
-                                        <input type="text" name="Username" id="Username"
-                                               value={this.state.client.username} readOnly/>
-                                        <label htmlFor="ticketCode">Email</label>
-                                        <input type="text" name="Email" id="Email" value={this.state.client.email}
-                                               readOnly/>
+                                (<div>
+                                        {
+                                            this.state.client.photo  ?
+                                                <img src={this.state.client.photo.src} width="330" height="250"
+                                                     alt={"No photo available for this user"}/> : null
+                                        }
+                                        <div className="input">
+
+                                            <label htmlFor="ticketCode">Name</label>
+                                            <input type="text" name="Name" id="Name" value={this.state.client.name}
+                                                   readOnly/>
+                                            <label htmlFor="ticketCode">Username</label>
+                                            <input type="text" name="Username" id="Username"
+                                                   value={this.state.client.username} readOnly/>
+                                            <label htmlFor="ticketCode">Email</label>
+                                            <input type="text" name="Email" id="Email" value={this.state.client.email}
+                                                   readOnly/>
+                                        </div>
                                     </div>
                                 ) : null
                             }

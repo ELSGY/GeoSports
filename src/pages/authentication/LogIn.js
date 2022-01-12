@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../App.css';
-import {Link, Route, Router} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const CryptoJS = require("crypto-js")
 
@@ -28,33 +28,37 @@ export default class LogIn extends React.Component {
         this.setCookie = this.setCookie.bind(this);
     }
 
+    componentDidMount() {
+        localStorage.clear();
+    }
+
     async loginUser(event) {
         event.preventDefault()
         await fetch("http://localhost:8080/user/getUserByUsername/" + this.state.client.username)
             .then(r => r.json())
             .then(r => this.setUser(r))
-            .catch(error => {
-                console.log(error)
+            .then(r => {
+                console.log(r);
+                if (r === "user") {
+                    this.props.history.push("/user/seeEvents")
+                } else if (r === "admin") {
+                    this.props.history.push("/admin/manageEvents")
+                } else {
+                    alert("Invalid credentials...")
+                }
+            })
+            .catch(() => {
+                alert("Invalid credentials...")
             });
+
     }
 
     async setUser(user) {
         const decryptedPassword = await this.decryptPassword(user["password"]);
         const username = user["username"];
+        const isAdmin = user["isAdmin"];
 
         if (this.state.client.password === decryptedPassword && this.state.client.username === username) {
-            if (user["isAdmin"] === true) {
-                this.setState({
-                    path: '/user'
-                });
-                console.warn("User is logging in...");
-            } else {
-                this.setState({
-                    path: '/admin'
-                });
-                console.warn("Admin is logging in...");
-            }
-
             await this.setState({
                 client: {
                     name: user["name"],
@@ -67,6 +71,15 @@ export default class LogIn extends React.Component {
             })
             await this.setCookie()
             alert("Successfully logged in...")
+            if (isAdmin === "false") {
+                console.warn("User is logging in...");
+                // this.props.history.push("/user/seeEvents");
+                return "user";
+            } else {
+                console.warn("Admin is logging in...");
+                // this.props.history.push("/admin/manageEvents");
+                return "admin";
+            }
         } else {
             console.warn("Invalid credentials...")
             alert("Invalid credentials...")
@@ -79,7 +92,7 @@ export default class LogIn extends React.Component {
             username: this.state.client.username,
             email: this.state.client.email
         }
-        await sessionStorage.setItem("clientCookie", JSON.stringify(clientCookie));
+        await localStorage.setItem("clientCookie", JSON.stringify(clientCookie));
     }
 
     async updateUsername(event) {
@@ -114,41 +127,40 @@ export default class LogIn extends React.Component {
 
     render() {
         return (
-            <Route>
-                <div>
-                    <div className="background-signin">
-                        <main className="box">
-                            <h2>Login</h2>
-                            <form>
-                                <div className="inputBox">
-                                    <label htmlFor="userName"><a className={"required"}>*</a>Username</label>
-                                    <input type="text" name="userName" id="userName" placeholder="type your username"
-                                           onChange={this.updateUsername}
-                                           required/>
-                                </div>
-                                <div className="inputBox">
-                                    <label htmlFor="userPassword"><a className={"required"}>*</a>Password</label>
-                                    <input type="password" name="userPassword" id="userPassword"
-                                           placeholder="type your password"
-                                           onChange={this.updatePassword}
-                                           required/>
-                                </div>
-                                <div className="loginButton">
-                                    <Link to={this.state.path}>
-                                        <button type="submit" name="loginButton"
-                                                onClick={this.loginUser}>Login
-                                        </button>
-                                    </Link>
-                                </div>
-                            </form>
-                            <div>
-                                <p className="signup">Don't have an account?</p>
-                                <Link className={"linkButton"} to="/signup"><p className="login">SIGN UP</p></Link>
+            <div>
+                <div className="background-signin">
+                    <main className="box">
+                        <h2>Login</h2>
+                        <form>
+                            <div className="inputBox">
+                                <label htmlFor="userName"><a className={"required"}>*</a>Username</label>
+                                <input type="text" name="userName" id="userName"
+                                       placeholder="type your username"
+                                       onChange={this.updateUsername}
+                                       required/>
                             </div>
-                        </main>
-                    </div>
+                            <div className="inputBox">
+                                <label htmlFor="userPassword"><a className={"required"}>*</a>Password</label>
+                                <input type="password" name="userPassword" id="userPassword"
+                                       placeholder="type your password"
+                                       onChange={this.updatePassword}
+                                       required/>
+                            </div>
+                            <div className="loginButton">
+                                <Link>
+                                    <button type="submit" name="loginButton"
+                                            onClick={this.loginUser}>Login
+                                    </button>
+                                </Link>
+                            </div>
+                        </form>
+                        <div>
+                            <p className="signup">Don't have an account?</p>
+                            <Link className={"linkButton"} to="/"><p className="login">SIGN UP</p></Link>
+                        </div>
+                    </main>
                 </div>
-            </Route>
+            </div>
         );
     }
 }

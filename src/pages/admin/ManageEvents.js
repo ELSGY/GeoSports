@@ -19,7 +19,13 @@ export default class ManageEvents extends React.Component {
                     date: "",
                     time: ""
                 }
-            ]
+            ],
+            onUpdate: {
+                name: "",
+                avbPlaces: "",
+                date: "",
+                time: ""
+            }
         }
 
         this.buildActivities = this.buildActivities.bind(this);
@@ -28,7 +34,7 @@ export default class ManageEvents extends React.Component {
         this.updateName = this.updateName.bind(this);
         this.updateParticipants = this.updateParticipants.bind(this);
         this.getActivityById = this.getActivityById.bind(this);
-
+        this.updateActivity = this.updateActivity.bind(this);
     }
 
     componentDidMount() {
@@ -50,36 +56,89 @@ export default class ManageEvents extends React.Component {
         console.log(this.state.activities);
     }
 
-    updateTime(event) {
-        console.log(event.target.value)
-        console.log(event.target.id)
+    async updateTime(event) {
+        await this.setState({
+            onUpdate: {
+                name: this.state.onUpdate.name,
+                avbPlaces: this.state.onUpdate.avbPlaces,
+                date: this.state.onUpdate.date,
+                time: event.target.value
+            }
+        });
+        console.log(this.state.onUpdate);
     }
 
-    updateDate(event) {
-        console.log(event.target.value)
-        console.log(event.target.id)
+    async updateDate(event) {
+        await this.setState({
+            onUpdate: {
+                name: this.state.onUpdate.name,
+                avbPlaces: this.state.onUpdate.avbPlaces,
+                date: event.target.value,
+                time: this.state.onUpdate.time
+            }
+        });
+        console.log(this.state.onUpdate);
     }
 
-    updateParticipants(event) {
+    async updateParticipants(event) {
+        await this.setState({
+            onUpdate: {
+                name: this.state.onUpdate.name,
+                avbPlaces: event.target.value,
+                date: this.state.onUpdate.date,
+                time: this.state.onUpdate.time
+            }
+        });
+        console.log(this.state.onUpdate);
+    }
+
+    async updateName(event) {
+        await this.setState({
+            onUpdate: {
+                name: event.target.value,
+                avbPlaces: this.state.onUpdate.avbPlaces,
+                date: this.state.onUpdate.date,
+                time: this.state.onUpdate.time
+            }
+        });
+        console.log(this.state.onUpdate);
+    }
+
+    async getActivityById(id) {
+        return await this.state.activities[id];
+    }
+
+    async updateActivity(event) {
         const index = event.target.id;
-        console.log(index)
+        const activity = this.state.activities[index];
 
-        const _activities = this.state.activities;
-        _activities[index].participants = event.target.value;
-        this.setState({
-            activities: _activities
-        }, () => console.log("Participants updated..."))
+        const updatedName = this.state.onUpdate.name;
+        const updatedDate = this.state.onUpdate.date;
+        const updatedTime = this.state.onUpdate.time;
+        const updatedPlaces = this.state.onUpdate.avbPlaces;
 
-        console.log(this.state.activities[index])
-    }
+        if (updatedName !== "") {
+            activity['name'] = updatedName;
+        }
+        if (updatedDate !== "") {
+            activity['date'] = updatedDate;
+        }
+        if (updatedTime !== "") {
+            activity['time'] = updatedTime;
+        }
+        if (updatedPlaces !== "") {
+            activity['avbPlaces'] = updatedPlaces;
+        }
 
-    updateName(event) {
-        console.log(event.target.value)
-        console.log(event.target.id)
-    }
+        console.log(activity);
 
-    getActivityById(id) {
-        return this.state.activities[id];
+        fetch("http://localhost:8080/activity/updateActivity/" + activity.name + "/" + activity.date + "/" + activity.time + "/" + activity.avbPlaces + "/" + activity.id)
+            .catch(error => {
+                console.log(error)
+            });
+        alert("Activity was updated!")
+
+        window.location.reload(true);
     }
 
     render() {
@@ -88,7 +147,6 @@ export default class ManageEvents extends React.Component {
                 <div className="main">
                     <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000}}>
                         <table>
-
                             <thead>
                             <tr>
                                 <th>Name</th>
@@ -99,31 +157,43 @@ export default class ManageEvents extends React.Component {
                                 <th>Available places</th>
                                 {/*<th>Action</th>*/}
                             </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" placeholder={"type new name"} onChange={this.updateName}/>
+                                </td>
+                                <td>
+                                    <input type="date" onChange={this.updateDate}/>
+                                </td>
+                                <td>
+                                    <input type="time" onChange={this.updateTime}/>
+                                </td>
+                                <td>
+                                    <input type="text" placeholder={"type new number"} onChange={this.updateParticipants}/>
+                                </td>
+                            </tr>
                             {
                                 this.state.activities.map((obj, index) => {
                                     return (
                                         <tr key={index}>
                                             <td>
                                                 <input type="text" id={index} value={obj["name"]}
-                                                       onChange={this.updateName}/>
+                                                       readOnly/>
                                             </td>
-                                            {/*<td>{obj["category"]}</td>*/}
-                                            {/*<td>{obj["subcategory"]}</td>*/}
                                             <td>
                                                 <input type="date" id={index} value={obj["date"]}
-                                                       onChange={this.updateDate}/>
+                                                       readOnly/>
                                             </td>
                                             <td>
                                                 <input type="time" id={index} value={obj["time"]}
-                                                       onChange={this.updateTime}/>
+                                                       readOnly/>
                                             </td>
                                             <td>
                                                 <input type="number" id={index} value={obj["avbPlaces"]}
-                                                       onChange={this.updateParticipants}/>
+                                                       readOnly/>
                                             </td>
                                             <td style={{background: "transparent"}}>
                                                 <input type="submit" id={index} value="Update"
-                                                       onClick={this.updateParticipants}/>
+                                                       onClick={this.updateActivity}/>
                                             </td>
                                         </tr>
                                     )

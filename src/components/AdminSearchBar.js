@@ -11,7 +11,7 @@ import {adminNavItems} from "./AdminNavItems";
 import ManageEvents from "../pages/admin/ManageEvents";
 import AddEvents from "../pages/admin/AddEvents";
 import Search from "../pages/admin/Search";
-import LogIn from "../pages/authentication/LogIn";
+import SignUp from "../pages/authentication/SignUp";
 
 export default class AdminSearchBar extends React.Component {
     render() {
@@ -34,17 +34,17 @@ export default class AdminSearchBar extends React.Component {
                         </ul>
                     </nav>
                     <Switch>
-                        <Route path="/admin/manageEvents">
+                        <Route exact={true} path="/admin/manageEvents">
                             <ManageEvents/>
                         </Route>
-                        <Route path="/admin/addEvents">
+                        <Route exact={true} path="/admin/addEvents">
                             <AddEvents/>
                         </Route>
-                        <Route path="/admin/searchClient">
+                        <Route exact={true} path="/admin/searchClient">
                             <Search/>
                         </Route>
-                        <Route path="/signOut">
-                            <LogIn/>
+                        <Route exact={true} path="/">
+                            <SignUp/>
                         </Route>
                     </Switch>
                 </Router>

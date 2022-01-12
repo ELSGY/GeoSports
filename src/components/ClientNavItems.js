@@ -8,7 +8,7 @@ export const clientNavItems = [
     {
         id: 2,
         title: "Sign out",
-        path: "/signOut",
+        path: "/",
         cName: "nav-item"
     }
 ]
