@@ -43,9 +43,9 @@ export default class AddEvents extends React.Component {
             },
             categories: [
                 {
-                    category: "No set",
+                    category: '',
                     subcategories: [
-                        "No set"
+                        ''
                     ]
                 }]
         }
@@ -127,7 +127,7 @@ export default class AddEvents extends React.Component {
         });
 
         this.setState({categories: categories});
-        // console.log(this.state.categories);
+        console.log(this.state.categories);
     }
 
     getCity(addressArray) {
@@ -245,13 +245,17 @@ export default class AddEvents extends React.Component {
     }
 
     updateCategory(event) {
+
+        const arraySplit = event.target.value.split(",");
+
+        console.log(arraySplit[0])
         this.setState({
             event: {
                 name: this.state.event.name,
                 latitude: this.state.markerPosition.lat,
                 longitude: this.state.markerPosition.lng,
-                category: event.target.value[0],
-                subcategory: event.target.value[2],
+                category: arraySplit[0],
+                subcategory: arraySplit[1],
                 address: this.state.address,
                 participants: this.state.event.participants,
                 date: this.state.event.date,

@@ -9,7 +9,7 @@ export default class ManageEvents extends React.Component {
             activities: [
                 {
                     id: 0,
-                    name: "",
+                    name: "NaN",
                     latitude: 0,
                     longitude: 0,
                     avbPlaces: 0,
@@ -46,14 +46,17 @@ export default class ManageEvents extends React.Component {
     async buildActivities(response) {
 
         const activities = []
-        response.forEach(obj => {
-            activities.push(obj);
-        });
+        console.log(response);
+        if (response["status"] !== 500) {
+            response.forEach(obj => {
+                activities.push(obj);
+            });
 
-        this.setState({
-            activities: activities
-        })
-        console.log(this.state.activities);
+            this.setState({
+                activities: activities
+            })
+            console.log(this.state.activities);
+        }
     }
 
     async updateTime(event) {
@@ -168,36 +171,43 @@ export default class ManageEvents extends React.Component {
                                     <input type="time" onChange={this.updateTime}/>
                                 </td>
                                 <td>
-                                    <input type="text" placeholder={"type new number"} onChange={this.updateParticipants}/>
+                                    <input type="text" placeholder={"type new number"}
+                                           onChange={this.updateParticipants}/>
                                 </td>
                             </tr>
-                            {
-                                this.state.activities.map((obj, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td>
-                                                <input type="text" id={index} value={obj["name"]}
-                                                       readOnly/>
-                                            </td>
-                                            <td>
-                                                <input type="date" id={index} value={obj["date"]}
-                                                       readOnly/>
-                                            </td>
-                                            <td>
-                                                <input type="time" id={index} value={obj["time"]}
-                                                       readOnly/>
-                                            </td>
-                                            <td>
-                                                <input type="number" id={index} value={obj["avbPlaces"]}
-                                                       readOnly/>
-                                            </td>
-                                            <td style={{background: "transparent"}}>
-                                                <input type="submit" id={index} value="Update"
-                                                       onClick={this.updateActivity}/>
-                                            </td>
-                                        </tr>
-                                    )
-                                })
+                            {this.state.activities ?
+                                (
+                                    this.state.activities.map((obj, index) => {
+                                        return (
+                                            <tr key={index}>
+                                                <td>
+                                                    <input type="text" id={index} value={obj["name"]}
+                                                           readOnly/>
+                                                </td>
+                                                <td>
+                                                    <input type="date" id={index} value={obj["date"]}
+                                                           readOnly/>
+                                                </td>
+                                                <td>
+                                                    <input type="time" id={index} value={obj["time"]}
+                                                           readOnly/>
+                                                </td>
+                                                <td>
+                                                    <input type="number" id={index} value={obj["avbPlaces"]}
+                                                           readOnly/>
+                                                </td>
+                                                <td style={{background: "transparent"}}>
+                                                    {obj["name"] !== 'NaN' ?
+                                                        (<input type="submit" id={index} value="Update"
+                                                                onClick={this.updateActivity}/>
+                                                        ) : (<input type="submit" id={index} value="Unavailable" style={{background: "rgb(221, 221, 221)"}}
+                                                        />)
+                                                    }
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                ) : null
                             }
                             </thead>
                         </table>

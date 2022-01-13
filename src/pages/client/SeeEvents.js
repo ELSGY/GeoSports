@@ -18,15 +18,15 @@ export default class SeeEvents extends React.Component {
             activities: [
                 {
                     id: 0,
-                    name: "",
+                    name: "Nan",
                     latitude: 0,
                     longitude: 0,
                     avbPlaces: 0,
-                    category: "",
-                    subcategory: "",
-                    address: "",
-                    date: "",
-                    time: "",
+                    category: "Nan",
+                    subcategory: "Nan",
+                    address: "Nan",
+                    date: "Nan",
+                    time: "Nan",
                     attending: 0
                 }
             ]
@@ -140,6 +140,7 @@ export default class SeeEvents extends React.Component {
                             <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Address</th>
                                 <th>Category</th>
                                 <th>Subcategory</th>
                                 <th>Date</th>
@@ -151,6 +152,9 @@ export default class SeeEvents extends React.Component {
                                     return (<tr key={index}>
                                         <td>
                                             {obj["name"]}
+                                        </td>
+                                        <td>
+                                            {obj["address"]}
                                         </td>
                                         <td>
                                             {obj["category"]}
