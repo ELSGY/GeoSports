@@ -10,7 +10,6 @@ Geocode["setApiKey"]("AIzaSyC9-oir9k71wA2xOmZD9d-UNe_2e5Gmtqw");
 Geocode["enableDebug"]();
 
 export default class AddEvents extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -39,7 +38,8 @@ export default class AddEvents extends React.Component {
                 subcategory: 3,
                 participants: 0,
                 date: '',
-                time: ''
+                time: '',
+                photo: ''
             },
             categories: [
                 {
@@ -62,6 +62,8 @@ export default class AddEvents extends React.Component {
         this.updateAddress = this.updateAddress.bind(this);
         this.updateTime = this.updateTime.bind(this);
         this.updateDate = this.updateDate.bind(this);
+        this.updatePhoto = this.updatePhoto.bind(this);
+        this.convertFile = this.convertFile.bind(this);
         this.updateCategory = this.updateCategory.bind(this);
         this.updateParticipants = this.updateParticipants.bind(this);
         this.buildCategories = this.buildCategories.bind(this);
@@ -228,8 +230,8 @@ export default class AddEvents extends React.Component {
         })
     };
 
-    updateName(event) {
-        this.setState({
+    async updateName(event) {
+        await this.setState({
             event: {
                 name: event.target.value,
                 latitude: this.state.markerPosition.lat,
@@ -239,17 +241,21 @@ export default class AddEvents extends React.Component {
                 address: this.state.address,
                 participants: this.state.event.participants,
                 date: this.state.event.date,
-                time: this.state.event.time
+                time: this.state.event.time,
+                photo: this.state.event.photo
             }
         });
     }
 
-    updateCategory(event) {
+    async updateCategory(event) {
+
+        console.log(event);
 
         const arraySplit = event.target.value.split(",");
 
         console.log(arraySplit[0])
-        this.setState({
+        console.log(arraySplit[1])
+        await this.setState({
             event: {
                 name: this.state.event.name,
                 latitude: this.state.markerPosition.lat,
@@ -259,13 +265,14 @@ export default class AddEvents extends React.Component {
                 address: this.state.address,
                 participants: this.state.event.participants,
                 date: this.state.event.date,
-                time: this.state.event.time
+                time: this.state.event.time,
+                photo: this.state.event.photo
             }
         });
     }
 
-    updateAddress(event) {
-        this.setState({
+    async updateAddress(event) {
+        await this.setState({
             event: {
                 name: this.state.event.name,
                 latitude: this.state.markerPosition.lat,
@@ -275,13 +282,14 @@ export default class AddEvents extends React.Component {
                 address: event.target.value,
                 participants: this.state.event.participants,
                 date: this.state.event.date,
-                time: this.state.event.time
+                time: this.state.event.time,
+                photo: this.state.event.photo
             }
         });
     }
 
-    updateParticipants(event) {
-        this.setState({
+    async updateParticipants(event) {
+        await this.setState({
             event: {
                 name: this.state.event.name,
                 latitude: this.state.markerPosition.lat,
@@ -291,18 +299,19 @@ export default class AddEvents extends React.Component {
                 address: this.state.address,
                 participants: parseInt(event.target.value),
                 date: this.state.event.date,
-                time: this.state.event.time
+                time: this.state.event.time,
+                photo: this.state.event.photo
             }
         });
     }
 
-    updateDate(event) {
+    async updateDate(event) {
         const now = new Date(event.target.value);
         masks.hammerTime = 'yyyy-mm-dd';
         const date = dateFormat(now, "hammerTime");
         // console.log(date)
 
-        this.setState({
+        await this.setState({
             event: {
                 name: this.state.event.name,
                 latitude: this.state.markerPosition.lat,
@@ -312,14 +321,15 @@ export default class AddEvents extends React.Component {
                 address: this.state.address,
                 participants: this.state.event.participants,
                 date: date,
-                time: this.state.event.time
+                time: this.state.event.time,
+                photo: this.state.event.photo
             }
         });
     }
 
-    updateTime(event) {
+    async updateTime(event) {
         // console.log(event.target.value)
-        this.setState({
+        await this.setState({
             event: {
                 name: this.state.event.name,
                 latitude: this.state.markerPosition.lat,
@@ -330,9 +340,45 @@ export default class AddEvents extends React.Component {
                 address: this.state.address,
                 participants: this.state.event.participants,
                 date: this.state.event.date,
-                time: event.target.value
+                time: event.target.value,
+                photo: this.state.event.photo
             }
         });
+    }
+
+    async updatePhoto(event) {
+        const file = event.target.files[0];
+        const resultPhoto = await this.convertFile(file);
+        console.log(resultPhoto);
+
+        await this.setState({
+            event: {
+                name: this.state.event.name,
+                latitude: this.state.markerPosition.lat,
+                longitude: this.state.markerPosition.lng,
+                avbPlaces: this.state.event.avbPlaces,
+                category: this.state.event.category,
+                subcategory: this.state.event.subcategory,
+                address: this.state.address,
+                participants: this.state.event.participants,
+                date: this.state.event.date,
+                time: this.state.event.time,
+                photo: resultPhoto
+            }
+        });
+        console.log(this.state.event.photo);
+    };
+
+    convertFile(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+
+            reader.onload = function () {
+                resolve(reader.result)
+            };
+        })
+
     }
 
     async addEvent() {
@@ -346,7 +392,8 @@ export default class AddEvents extends React.Component {
             idSubcat: this.state.event.subcategory,
             address: this.state.address,
             date: this.state.event.date,
-            time: this.state.event.time
+            time: this.state.event.time,
+            photo: this.state.event.photo
         }
 
         console.log(activity)
@@ -423,14 +470,15 @@ export default class AddEvents extends React.Component {
                             </div>
                             <div className="input">
                                 <label htmlFor="eventCategory"><a className={"required"}>*</a>Category</label>
-                                <select className="category" id="Event Type" placeholder="Choose category"
+                                <select className="category" placeholder="Choose category"
                                         onChange={this.updateCategory} required>
                                     {
                                         this.state.categories.map((obj, index) => {
-                                            return <optgroup key={index} label={obj.category}>
+                                            return <optgroup id={obj["category"]["catId"]}
+                                                             label={obj["category"]["catName"]}>
                                                 {obj.subcategories.map((sub, index1) => {
-                                                    const cat = [index + 1, index1 + 1]
-                                                    return <option value={cat} key={index1}>{sub}</option>
+                                                    const value = [obj["category"]["catId"], sub["subCatId"]];
+                                                    return <option value={value}>{sub["subCatName"]}</option>
                                                 })}
                                             </optgroup>
                                         })
@@ -454,6 +502,9 @@ export default class AddEvents extends React.Component {
                             <div className="input">
                                 <label htmlFor="nop"><a className={"required"}>*</a>Number of participants</label>
                                 <input type="number" name="name" id="name" onChange={this.updateParticipants} required/>
+                            </div>
+                            <div className="input">
+                                <input type="file" onChange={this.updatePhoto}/>
                             </div>
                             <div className="input">
                                 <input type="submit" name="name" id="name" value="Add Event"/>

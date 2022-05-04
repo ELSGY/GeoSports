@@ -27,6 +27,7 @@
     width: 70vw;
     justify-content: flex-end;
     margin-right: 2rem;
+    resize: none;
 }
 
 .nav-item {

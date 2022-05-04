@@ -35,12 +35,14 @@ export default class SignUp extends React.Component {
         this.encryptPassword = this.encryptPassword.bind(this);
         this.takePhoto = this.takePhoto.bind(this);
         this.activateCamera = this.activateCamera.bind(this);
+        this.deactivateCamera = this.deactivateCamera.bind(this);
     }
 
     async componentDidMount() {
         function disableBack() {
             window.history.forward();
         }
+
         setTimeout("disableBack()", 0);
         window.onunload = null;
 
@@ -170,6 +172,12 @@ export default class SignUp extends React.Component {
         })
     }
 
+    deactivateCamera() {
+        this.setState({
+            webcamActive: false
+        })
+    }
+
     render() {
         const videoConstraints = {
             facingMode: "client"
@@ -215,6 +223,10 @@ export default class SignUp extends React.Component {
                                                 ref={this.state.webcamRef} screenshotFormat="image/jpeg"/>
                                         <button type="submit" name="userPhoto" placeholder="your photo"
                                                 onClick={this.takePhoto}>Take photo
+                                        </button>
+                                        <p className={"or"}>or</p>
+                                        <button type="submit" name="userPhoto" placeholder="your photo"
+                                                onClick={this.deactivateCamera}>Upload from computer
                                         </button>
                                     </div>
                                     )

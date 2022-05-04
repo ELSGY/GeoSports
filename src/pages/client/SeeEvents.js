@@ -38,6 +38,7 @@ export default class SeeEvents extends React.Component {
         this.getCookie = this.getCookie.bind(this);
         this.fetchDefaultActivities = this.fetchDefaultActivities.bind(this)
         this.setCoords = this.setCoords.bind(this)
+        this.seeActivityDetails = this.seeActivityDetails.bind(this)
 
     }
 
@@ -127,6 +128,10 @@ export default class SeeEvents extends React.Component {
 
     }
 
+    seeActivityDetails(event) {
+        console.log(event.target.id);
+    }
+
     getActivityById(id) {
         return this.state.activities[id];
     }
@@ -135,60 +140,93 @@ export default class SeeEvents extends React.Component {
         return (
             <div className="background">
                 <div className="main">
-                    <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000}}>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Address</th>
-                                <th>Category</th>
-                                <th>Subcategory</th>
-                                <th>Date</th>
-                                <th width="10px">Time</th>
-                                <th>Available places</th>
-                            </tr>
-                            {
+                    <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000, height: '90%'}}>
+                        {
+                            this.state.activities.name === "Nan" ?
+                                <div className={"noEvents"}>
+                                    <div className={"noEventsImg"}/>
+                                    <h2 className={"noEventsMessage"}>No events found </h2>
+                                </div>
+                                :
                                 this.state.activities.map((obj, index) => {
-                                    return (<tr key={index}>
-                                        <td>
-                                            {obj["name"]}
-                                        </td>
-                                        <td>
-                                            {obj["address"]}
-                                        </td>
-                                        <td>
-                                            {obj["category"]}
-                                        </td>
-                                        <td>
-                                            {obj["subcategory"]}
-                                        </td>
-                                        <td>
-                                            {obj["date"]}
-                                        </td>
-                                        <td>
-                                            {obj["time"]}
-                                        </td>
-                                        <td>
-                                            {obj["avbPlaces"]}
-                                        </td>
-                                        {
-                                            obj["avbPlaces"] === 0 ?
-                                                (<td style={{background: "transparent"}}>
-                                                    <input type="submit" id={index} value="Unavailable"
-                                                           style={{background: "rgb(221, 221, 221)"}}/>
-
-                                                </td>)
-                                                : (<td style={{background: "transparent"}}>
-                                                    <input type="submit" id={index} value="Enroll"
-                                                           onClick={this.sendEnrolledEmail}/>
-
-                                                </td>)
-                                        }
-                                    </tr>)
+                                    return (
+                                        <div className={"activities"}>
+                                            <div id={obj["name"]} className={"activity"}>
+                                                <div className={"actColumn"}>
+                                                    <img className={"activityImg"}
+                                                         src={obj["photo"]}
+                                                         alt={""}/>
+                                                </div>
+                                                <div className={"actColumn"}>
+                                                    <h3 className={"actTitle1"}>{obj["name"]}</h3>
+                                                </div>
+                                                <div className={"actColumn"}>
+                                                    <h5 className={"actTitle2"}>{obj["address"]}</h5>
+                                                </div>
+                                                <div className={"actColumn1"}>
+                                                    <input className={"actInput"} type="submit" id={obj["name"]}
+                                                           value="Details"
+                                                           onClick={this.seeActivityDetails}/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
                                 })
-                            }
-                            </thead>
-                        </table>
+                        }
+
+                        {/*<table>*/}
+                        {/*    <thead>*/}
+                        {/*    <tr>*/}
+                        {/*        <th>Name</th>*/}
+                        {/*        <th>Address</th>*/}
+                        {/*        <th>Category</th>*/}
+                        {/*        <th>Subcategory</th>*/}
+                        {/*        <th>Date</th>*/}
+                        {/*        <th width="10px">Time</th>*/}
+                        {/*        <th>Available places</th>*/}
+                        {/*    </tr>*/}
+                        {/*    {*/}
+                        {/*        this.state.activities.map((obj, index) => {*/}
+                        {/*            return (<tr key={index}>*/}
+                        {/*                <td>*/}
+                        {/*                    {obj["name"]}*/}
+                        {/*                </td>*/}
+                        {/*                <td>*/}
+                        {/*                    {obj["address"]}*/}
+                        {/*                </td>*/}
+                        {/*                <td>*/}
+                        {/*                    {obj["category"]}*/}
+                        {/*                </td>*/}
+                        {/*                <td>*/}
+                        {/*                    {obj["subcategory"]}*/}
+                        {/*                </td>*/}
+                        {/*                <td>*/}
+                        {/*                    {obj["date"]}*/}
+                        {/*                </td>*/}
+                        {/*                <td>*/}
+                        {/*                    {obj["time"]}*/}
+                        {/*                </td>*/}
+                        {/*                <td>*/}
+                        {/*                    {obj["avbPlaces"]}*/}
+                        {/*                </td>*/}
+                        {/*                {*/}
+                        {/*                    obj["avbPlaces"] === 0 ?*/}
+                        {/*                        (<td style={{background: "transparent"}}>*/}
+                        {/*                            <input type="submit" id={index} value="Unavailable"*/}
+                        {/*                                   style={{background: "rgb(221, 221, 221)"}}/>*/}
+
+                        {/*                        </td>)*/}
+                        {/*                        : (<td style={{background: "transparent"}}>*/}
+                        {/*                            <input type="submit" id={index} value="Enroll"*/}
+                        {/*                                   onClick={this.sendEnrolledEmail}/>*/}
+
+                        {/*                        </td>)*/}
+                        {/*                }*/}
+                        {/*            </tr>)*/}
+                        {/*        })*/}
+                        {/*    }*/}
+                        {/*    </thead>*/}
+                        {/*</table>*/}
                     </div>
                 </div>
             </div>
