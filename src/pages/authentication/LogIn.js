@@ -1,6 +1,7 @@
 import React from 'react';
 import '../../App.css';
 import {Link} from "react-router-dom";
+import PopupStatus from "../../components/Utils/PopupStatus";
 
 const CryptoJS = require("crypto-js")
 
@@ -26,6 +27,15 @@ export default class LogIn extends React.Component {
         this.loginUser = this.loginUser.bind(this);
         this.setUser = this.setUser.bind(this);
         this.setCookie = this.setCookie.bind(this);
+        this.updatePopupStatusMessage = this.updatePopupStatusMessage.bind(this);
+    }
+
+    updatePopupStatusMessage(message, type) {
+        this.setState({
+                popupStatusMessage: message,
+                popupStatusType: type
+            }
+        )
     }
 
     componentDidMount() {
@@ -54,7 +64,7 @@ export default class LogIn extends React.Component {
     }
 
     async setUser(user) {
-        const decryptedPassword = await this.decryptPassword(user["password"]);
+        const decryptedPassword = await this.decryptPassword(user["password"], user["username"]);
         const username = user["username"];
         const isAdmin = user["isAdmin"];
 
@@ -70,7 +80,7 @@ export default class LogIn extends React.Component {
                 }
             })
             await this.setCookie()
-            alert("Successfully logged in...")
+            alert("Successfully logged in...");
             if (isAdmin === "false") {
                 console.warn("User is logging in...");
                 // this.props.history.push("/user/seeEvents");
@@ -121,13 +131,14 @@ export default class LogIn extends React.Component {
         });
     }
 
-    async decryptPassword(password) {
-        return await CryptoJS["AES"].decrypt(password, "PASSWORD").toString(CryptoJS["enc"].Utf8);
+    async decryptPassword(password, username) {
+        return await CryptoJS["AES"].decrypt(password, username).toString(CryptoJS["enc"].Utf8);
     }
 
     render() {
         return (
             <div>
+                <PopupStatus message={this.state.popupStatusMessage} type={this.state.popupStatusType}/>
                 <div className="background-signin">
                     <main className="box">
                         <h2>Login</h2>

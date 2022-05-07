@@ -6,21 +6,18 @@
 }
 
 /*SingIn and Register*/
-.or {
-    color: white;
-}
-
 .box {
     height: auto;
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 10px;
     box-shadow: 0 15px 25px rgba(0, 0, 0, 0.8);
-    margin: 32px auto;
+    margin: auto auto;
     padding: 40px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    box-sizing: border-box;
 }
 
 .box h2 {

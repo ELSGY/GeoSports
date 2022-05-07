@@ -6,6 +6,7 @@ import {
     Link,
     Route
 } from "react-router-dom";
+import PopupStatus from "../../components/Utils/PopupStatus";
 
 const CryptoJS = require("crypto-js")
 
@@ -25,8 +26,12 @@ export default class SignUp extends React.Component {
             },
             webcamRef: React.createRef(),
             webcamActive: false,
-            refreshed: 1
+            refreshed: 1,
+            popupStatusMessage: '',
+            popupStatusType: '',
+            alreadyExistEmail: ''
         }
+
         this.updateName = this.updateName.bind(this);
         this.updateUsername = this.updateUsername.bind(this);
         this.updateEmail = this.updateEmail.bind(this);
@@ -36,20 +41,22 @@ export default class SignUp extends React.Component {
         this.takePhoto = this.takePhoto.bind(this);
         this.activateCamera = this.activateCamera.bind(this);
         this.deactivateCamera = this.deactivateCamera.bind(this);
+        this.updatePopupStatusMessage = this.updatePopupStatusMessage.bind(this);
     }
 
     async componentDidMount() {
-        function disableBack() {
-            window.history.forward();
-        }
-
-        setTimeout("disableBack()", 0);
-        window.onunload = null;
-
         if (localStorage.getItem("clientCookie") !== null) {
             localStorage.clear();
             window.location.reload(true);
         }
+    }
+
+    updatePopupStatusMessage(message, type) {
+        this.setState({
+                popupStatusMessage: message,
+                popupStatusType: type
+            }
+        )
     }
 
     async updateName(event) {
@@ -104,39 +111,49 @@ export default class SignUp extends React.Component {
         });
     }
 
-    registerUser(event) {
-        const encryptedPassword = this.encryptPassword()
+    async registerUser(e) {
+        e.preventDefault();
+        await fetch("http://localhost:8080/user/getUserByEmail/" + this.state.client.email)
+            .then(r => r.json())
+            .then(r => this.setState({alreadyExistEmail: r["email"]}))
 
-        const urlInsert = "/user/insertUser";
+        console.log(this.state.alreadyExistEmail);
 
-        const user = {
-            full_name: this.state.client.name,
-            username: this.state.client.username,
-            email: this.state.client.email,
-            password: encryptedPassword,
-            photo: this.state.client.photo,
-            isAdmin: this.state.client.isAdmin
+        if (this.state.alreadyExistEmail.length > 6) {
+            console.log("Account already exists!")
+            alert("Account already exists!")
+        } else {
+            const encryptedPassword = this.encryptPassword();
+
+            const urlInsert = "/user/insertUser";
+
+            const user = {
+                full_name: this.state.client.name,
+                username: this.state.client.username,
+                email: this.state.client.email,
+                password: encryptedPassword,
+                photo: this.state.client.photo,
+                isAdmin: this.state.client.isAdmin
+            }
+
+            this.setCookie().then(() => console.warn("Cookie is set up..."))
+
+            API.post(urlInsert, user)
+                .catch(error => {
+                    console.log(error)
+                });
+
+            fetch("http://localhost:8080/mail/welcome/" + this.state.client.email + "/" + this.state.client.name)
+                .catch(error => {
+                    console.log(error)
+                });
+            alert("Your account was created!")
+            this.props.history.push("/user/seeEvents");
         }
-
-        // console.log(user)
-
-        this.setCookie().then(() => console.warn("Cookie is set up..."))
-
-        API.post(urlInsert, user)
-            .catch(error => {
-                console.log(error)
-            });
-
-        fetch("http://localhost:8080/mail/welcome/" + this.state.client.email + "/" + this.state.client.name)
-            .catch(error => {
-                console.log(error)
-            });
-        alert("Your account was created!")
-        this.props.history.push("/user/seeEvents");
     }
 
     encryptPassword() {
-        return CryptoJS["AES"].encrypt(this.state.client.password, "PASSWORD").toString()
+        return CryptoJS["AES"].encrypt(this.state.client.password, this.state.client.username).toString()
     }
 
     async setCookie() {
@@ -162,8 +179,9 @@ export default class SignUp extends React.Component {
                 isAdmin: this.state.client.isAdmin
             }
         });
-
-        alert("Photo taken!")
+        // this.updatePopupStatusMessage("fot", 'success');
+        // alert("Photo taken!", , )
+        alert("Photo taken!");
     }
 
     activateCamera() {
@@ -215,8 +233,6 @@ export default class SignUp extends React.Component {
                             </div>
                             {this.state.webcamActive ?
                                 <div className="inputBox">
-                                    <label htmlFor="videoDiv"><a className={"required"}>*</a>Take a photo</label>
-                                    (
                                     <div>
                                         <Webcam className="video" width={250} height={250}
                                                 videoConstraints={videoConstraints}
@@ -224,12 +240,11 @@ export default class SignUp extends React.Component {
                                         <button type="submit" name="userPhoto" placeholder="your photo"
                                                 onClick={this.takePhoto}>Take photo
                                         </button>
-                                        <p className={"or"}>or</p>
                                         <button type="submit" name="userPhoto" placeholder="your photo"
-                                                onClick={this.deactivateCamera}>Upload from computer
+                                                onClick={this.deactivateCamera}>Close
                                         </button>
                                     </div>
-                                    )
+
                                 </div>
                                 :
                                 <button type="submit" name="userPhoto" placeholder="your photo"
@@ -239,12 +254,12 @@ export default class SignUp extends React.Component {
                             <button type="submit" style={{float: "left"}}>Sign Up
                             </button>
                         </form>
-                        {!this.state.webcamActive ?
-                            <div>
-                                <p className="login">Already have an account?</p>
-                                <Link className={"linkButton"} to="/login"><p className="login">LOGIN</p></Link>
-                            </div> : null
-                        }
+                        {/*!this.state.webcamActive ?*/}
+                        <div>
+                            <p className="login">Already have an account?</p>
+                            <Link className={"linkButton"} to="/login"><p className="login">LOGIN</p></Link>
+                        </div>
+
                     </main>
                 </div>
             </Route>

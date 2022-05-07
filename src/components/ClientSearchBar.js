@@ -41,6 +41,6 @@ export default class ClientSearchBar extends React.Component {
                     </Switch>
                 </Router>
             </Route>
-        )
+        );
     }
 }

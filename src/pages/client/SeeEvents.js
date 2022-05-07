@@ -1,4 +1,12 @@
 import React from 'react';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
+import SignUp from "../authentication/SignUp";
+import ActivityEnrollPage from "./ActivityEnrollPage";
 
 export default class SeeEvents extends React.Component {
 
@@ -138,98 +146,109 @@ export default class SeeEvents extends React.Component {
 
     render() {
         return (
-            <div className="background">
-                <div className="main">
-                    <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000, height: '90%'}}>
-                        {
-                            this.state.activities.name === "Nan" ?
-                                <div className={"noEvents"}>
-                                    <div className={"noEventsImg"}/>
-                                    <h2 className={"noEventsMessage"}>No events found </h2>
-                                </div>
-                                :
-                                this.state.activities.map((obj, index) => {
-                                    return (
-                                        <div className={"activities"}>
-                                            <div id={obj["name"]} className={"activity"}>
-                                                <div className={"actColumn"}>
-                                                    <img className={"activityImg"}
-                                                         src={obj["photo"]}
-                                                         alt={""}/>
-                                                </div>
-                                                <div className={"actColumn"}>
-                                                    <h3 className={"actTitle1"}>{obj["name"]}</h3>
-                                                </div>
-                                                <div className={"actColumn"}>
-                                                    <h5 className={"actTitle2"}>{obj["address"]}</h5>
-                                                </div>
-                                                <div className={"actColumn1"}>
-                                                    <input className={"actInput"} type="submit" id={obj["name"]}
-                                                           value="Details"
-                                                           onClick={this.seeActivityDetails}/>
-                                                </div>
-                                            </div>
+            <Route>
+                <Router>
+                    <div className="background">
+                        <div className="main">
+                            <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000, height: '90%'}}>
+                                {
+                                    this.state.activities.name === "Nan" ?
+                                        <div className={"noEvents"}>
+                                            <div className={"noEventsImg"}/>
+                                            <h2 className={"noEventsMessage"}>No events found </h2>
                                         </div>
-                                    )
-                                })
-                        }
+                                        :
+                                        this.state.activities.map((obj, index) => {
+                                            return (
+                                                <div className={"activities"}>
+                                                    <div id={obj["name"]} className={"activity"}>
+                                                        <div className={"actColumn"}>
+                                                            <img className={"activityImg"}
+                                                                 src={obj["photo"]}
+                                                                 alt={""}/>
+                                                        </div>
+                                                        <div className={"actColumn"}>
+                                                            <h3 className={"actTitle1"}>{obj["name"]}</h3>
+                                                        </div>
+                                                        <div className={"actColumn"}>
+                                                            <h5 className={"actTitle2"}>{obj["address"]}</h5>
+                                                        </div>
+                                                        <div className={"actColumn1"}>
+                                                            <Link to={"/user/seeActivityDetails"}>"Details"</Link>
+                                                            {/*<input className={"actInput"} type="submit" id={obj["name"]}*/}
+                                                            {/*       value="Details"*/}
+                                                            {/*       onClick={this.props.history.push('/user/seeActivityDetails')}>*/}
+                                                            {/*</input>*/}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                }
 
-                        {/*<table>*/}
-                        {/*    <thead>*/}
-                        {/*    <tr>*/}
-                        {/*        <th>Name</th>*/}
-                        {/*        <th>Address</th>*/}
-                        {/*        <th>Category</th>*/}
-                        {/*        <th>Subcategory</th>*/}
-                        {/*        <th>Date</th>*/}
-                        {/*        <th width="10px">Time</th>*/}
-                        {/*        <th>Available places</th>*/}
-                        {/*    </tr>*/}
-                        {/*    {*/}
-                        {/*        this.state.activities.map((obj, index) => {*/}
-                        {/*            return (<tr key={index}>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["name"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["address"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["category"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["subcategory"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["date"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["time"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["avbPlaces"]}*/}
-                        {/*                </td>*/}
-                        {/*                {*/}
-                        {/*                    obj["avbPlaces"] === 0 ?*/}
-                        {/*                        (<td style={{background: "transparent"}}>*/}
-                        {/*                            <input type="submit" id={index} value="Unavailable"*/}
-                        {/*                                   style={{background: "rgb(221, 221, 221)"}}/>*/}
+                                {/*<table>*/}
+                                {/*    <thead>*/}
+                                {/*    <tr>*/}
+                                {/*        <th>Name</th>*/}
+                                {/*        <th>Address</th>*/}
+                                {/*        <th>Category</th>*/}
+                                {/*        <th>Subcategory</th>*/}
+                                {/*        <th>Date</th>*/}
+                                {/*        <th width="10px">Time</th>*/}
+                                {/*        <th>Available places</th>*/}
+                                {/*    </tr>*/}
+                                {/*    {*/}
+                                {/*        this.state.activities.map((obj, index) => {*/}
+                                {/*            return (<tr key={index}>*/}
+                                {/*                <td>*/}
+                                {/*                    {obj["name"]}*/}
+                                {/*                </td>*/}
+                                {/*                <td>*/}
+                                {/*                    {obj["address"]}*/}
+                                {/*                </td>*/}
+                                {/*                <td>*/}
+                                {/*                    {obj["category"]}*/}
+                                {/*                </td>*/}
+                                {/*                <td>*/}
+                                {/*                    {obj["subcategory"]}*/}
+                                {/*                </td>*/}
+                                {/*                <td>*/}
+                                {/*                    {obj["date"]}*/}
+                                {/*                </td>*/}
+                                {/*                <td>*/}
+                                {/*                    {obj["time"]}*/}
+                                {/*                </td>*/}
+                                {/*                <td>*/}
+                                {/*                    {obj["avbPlaces"]}*/}
+                                {/*                </td>*/}
+                                {/*                {*/}
+                                {/*                    obj["avbPlaces"] === 0 ?*/}
+                                {/*                        (<td style={{background: "transparent"}}>*/}
+                                {/*                            <input type="submit" id={index} value="Unavailable"*/}
+                                {/*                                   style={{background: "rgb(221, 221, 221)"}}/>*/}
 
-                        {/*                        </td>)*/}
-                        {/*                        : (<td style={{background: "transparent"}}>*/}
-                        {/*                            <input type="submit" id={index} value="Enroll"*/}
-                        {/*                                   onClick={this.sendEnrolledEmail}/>*/}
+                                {/*                        </td>)*/}
+                                {/*                        : (<td style={{background: "transparent"}}>*/}
+                                {/*                            <input type="submit" id={index} value="Enroll"*/}
+                                {/*                                   onClick={this.sendEnrolledEmail}/>*/}
 
-                        {/*                        </td>)*/}
-                        {/*                }*/}
-                        {/*            </tr>)*/}
-                        {/*        })*/}
-                        {/*    }*/}
-                        {/*    </thead>*/}
-                        {/*</table>*/}
+                                {/*                        </td>)*/}
+                                {/*                }*/}
+                                {/*            </tr>)*/}
+                                {/*        })*/}
+                                {/*    }*/}
+                                {/*    </thead>*/}
+                                {/*</table>*/}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        );
+                    <Switch>
+                        <Route exact={true} path={"/user/seeActivityDetails"}>
+                            <ActivityEnrollPage/>
+                        </Route>
+                    </Switch>
+                </Router>
+            </Route>
+        )
     }
 }
