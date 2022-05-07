@@ -10,6 +10,7 @@ import "./navbar.css";
 import {clientNavItems} from "./ClientNavItems";
 import SeeEvents from "../pages/client/SeeEvents";
 import SignUp from "../pages/authentication/SignUp";
+import ActivityEnrollPage from "../pages/client/ActivityEnrollPage";
 
 export default class ClientSearchBar extends React.Component {
     render() {
@@ -34,6 +35,9 @@ export default class ClientSearchBar extends React.Component {
                     <Switch>
                         <Route exact={true} path="/user/seeEvents">
                             <SeeEvents/>
+                        </Route>
+                        <Route exact={true} path="/user/seeActivityDetails">
+                            <ActivityEnrollPage/>
                         </Route>
                         <Route exact={true} path="/">
                             <SignUp/>

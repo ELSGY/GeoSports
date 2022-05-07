@@ -24,31 +24,39 @@ export default class ActivityEnrollPage extends React.Component {
         }
 
         this.buildActivities = this.buildActivities.bind(this);
-        this.fetchDefaultActivities = this.fetchDefaultActivities.bind(this)
+        this.fetchActivity = this.fetchActivity.bind(this);
+        this.getActivityCookie = this.getActivityCookie.bind(this)
 
     }
 
     async componentDidMount() {
-        // if (navigator.geolocation) {
-        //     await navigator.geolocation.getCurrentPosition(position => {
-        //             this.fetchDefaultActivities(position.coords.latitude, position.coords.longitude)
-        //         }
-        //     )
-        // }
+        await this.getActivityCookie();
+        await this.fetchActivity()
     }
 
-    async fetchDefaultActivities(lat, lng) {
-        await fetch("http://localhost:8080/activity/getDefaultActivitiesForUser/123/" + lat + "/" + lng)
+    async getActivityCookie() {
+        // get cookie from localStorage
+        const activityCookie = await localStorage.getItem("activityCookie");
+        const cookie = JSON.parse(activityCookie)
+
+        await this.setState({
+            activity: {
+                name: cookie.activityName
+            }
+        });
+    }
+
+    async fetchActivity() {
+        await fetch("http://localhost:8080/activity/getActivityByName/" + this.state.activity.name)
             .then(res => res.json())
             .then(res => this.buildActivities(res));
     }
 
     async buildActivities(response) {
-        console.log(response);
-
         await this.setState({
             activity: response
-        })
+        });
+        console.log(this.state.activity);
     }
 
     render() {
@@ -56,33 +64,23 @@ export default class ActivityEnrollPage extends React.Component {
             <div className="background">
                 <div className="main">
                     <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000, height: '90%'}}>
-                        {/*{*/}
-                        {/*    this.state.activity.name === "Nan" ?*/}
-                        {/*        <div className={"noEvents"}>*/}
-                        {/*            <div className={"noEventsImg"}/>*/}
-                        {/*            <h2 className={"noEventsMessage"}>No events found </h2>*/}
-                        {/*        </div>*/}
-                        {/*        :*/}
-                        {/*        this.state.activity.map((obj, index) => {*/}
-                        {/*            return (*/}
-                        {/*                <div className={"activities"}>*/}
-                        {/*                    <div id={obj["name"]} className={"activity"}>*/}
-                        {/*                        <div className={"actColumn"}>*/}
-                        {/*                            <img className={"activityImg"}*/}
-                        {/*                                 src={obj["photo"]}*/}
-                        {/*                                 alt={""}/>*/}
-                        {/*                        </div>*/}
-                        {/*                        <div className={"actColumn"}>*/}
-                        {/*                            <h3 className={"actTitle1"}>{obj["name"]}</h3>*/}
-                        {/*                        </div>*/}
-                        {/*                        <div className={"actColumn"}>*/}
-                        {/*                            <h5 className={"actTitle2"}>{obj["address"]}</h5>*/}
-                        {/*                        </div>*/}
-                        {/*                    </div>*/}
-                        {/*                </div>*/}
-                        {/*            )*/}
-                        {/*        })*/}
-                        {/*}*/}
+                        <div className={"activity"}>
+                            <div className={"activityDetails"}>
+                                <div className={"actColumn"}>
+                                    <img className={"activityImg"}
+                                         src={this.state.activity["photo"]}
+                                         alt={""}/>
+                                </div>
+                                <div className={"actColumn"}>
+                                    <h3 className={"actTitle1"}>{this.state.activity["name"]}</h3>
+                                </div>
+                                <div className={"actColumn"}>
+                                    <h5 className={"actTitle2"}>{this.state.activity["address"]}</h5>
+                                </div>
+                            </div>
+                            <div className={"activityMap"}>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

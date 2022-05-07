@@ -6,7 +6,6 @@ import {
     Link,
     Route
 } from "react-router-dom";
-import PopupStatus from "../../components/Utils/PopupStatus";
 
 const CryptoJS = require("crypto-js")
 

@@ -16,7 +16,7 @@ ReactDOM.render(
             <Route exact={true} path={"/admin/addEvents"} component={AdminSearchBar}/>
             <Route exact={true} path={"/admin/searchClient"} component={AdminSearchBar}/>
             <Route exact={true} path={"/user/seeEvents"} component={ClientSearchBar}/>
-            <Route exact={true} path={"/user/seeActivityDetails"} component={ActivityEnrollPage}/>
+            <Route exact={true} path={"/user/seeActivityDetails"} component={ClientSearchBar}/>
         </Switch>
     </Router>
     , document.getElementById("root"));

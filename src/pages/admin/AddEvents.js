@@ -525,7 +525,6 @@ export default class AddEvents extends React.Component {
                     </form>
                 </div>
             </div>
-
         )
     }
 }
