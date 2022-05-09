@@ -80,6 +80,11 @@
     text-align: center;
 }
 
+.video {
+    width: 100px;
+    height: 100px;
+}
+
 /*Default backgrund and div*/
 .background {
     margin: auto;
@@ -109,7 +114,7 @@
     background-repeat: no-repeat;
     background-position: center; /* Center the image */
     background-size: cover; /* Resize the background image to cover the entire container */
-    background-attachment: fixed;
+    /*background-attachment: fixed;*/
     animation: change 20s infinite forwards;
 }
 
@@ -339,7 +344,6 @@ td {
 }
 
 .noEvents {
-
     margin-left: 10px;
     margin-right: 10px;
 }
@@ -361,15 +365,67 @@ td {
 }
 
 /*ACTIVITY DETAILS*/
-.activity{
+.activityDetailsAll {
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     width: 100%;
-    height: 330px;
+    height: 137%;
     display: inline-block;
     margin: auto;
     border-radius: 8px;
+    /*padding-bottom: 10px;*/
+}
+
+.activityDetailsImg {
+    width: 340px;
+    height: 220px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin: 15px;
+}
+
+.actDetailsColumn {
+    display: flex;
+}
+
+.actDetailsTitle1 {
+    text-align: center;
+}
+
+.actDetailsTitle2 {
+    text-align: left;
+    color: rgba(0, 0, 0, 0.6);
+    padding-top: 10px;
+}
+
+.actDetailsTitle3 {
+    text-align: left;
+    color: rgba(0, 0, 0, 0.6);
+    padding-top: 10px;
+}
+
+.actDetailsTitle4 {
+    text-align: left;
+    color: rgba(0, 0, 0, 0.6);
+    padding-bottom: 20px;
+}
+
+
+.text {
+    width: 100%;
+    height: 100%;
+    /*-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), 0 0 40px rgba(0, 0, 0, 0.1) inset;*/
+    /*-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), 0 0 40px rgba(0, 0, 0, 0.1) inset;*/
+    /*box-shadow: 0 1px 4px rgba(0, 72, 255, 0.89), 0 0 40px rgba(0, 0, 0, 0.1) inset;*/
+    display: inline-block;
+    padding: 15px 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.activityMap {
+    padding: 10px 15px 20px;
 }
 
 

@@ -2,7 +2,9 @@ import React from 'react';
 import '../../App.css';
 import {Link} from "react-router-dom";
 import PopupStatus from "../../components/Utils/PopupStatus";
+import Geocode from "react-geocode";
 
+Geocode["setApiKey"]("AIzaSyC9-oir9k71wA2xOmZD9d-UNe_2e5Gmtqw");
 const CryptoJS = require("crypto-js")
 
 export default class LogIn extends React.Component {
@@ -19,7 +21,12 @@ export default class LogIn extends React.Component {
                 photo: '',
                 isAdmin: false
             },
-            path: ''
+            path: '',
+            coords: {
+                lat: '',
+                lng: '',
+                address: ''
+            }
         }
         this.updatePassword = this.updatePassword.bind(this);
         this.decryptPassword = this.decryptPassword.bind(this);
@@ -38,8 +45,28 @@ export default class LogIn extends React.Component {
         )
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         localStorage.clear();
+        if (navigator.geolocation) {
+            await navigator.geolocation.getCurrentPosition(position => {
+                    Geocode["fromLatLng"](position.coords.latitude, position.coords.longitude).then(
+                        response => {
+                            const address = response.results[0]["formatted_address"];
+                            this.setState({
+                                coords: {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude,
+                                    address: (address) ? address : ''
+                                }
+                            })
+                        },
+                        error => {
+                            console.error(error);
+                        }
+                    );
+                }
+            )
+        }
     }
 
     async loginUser(event) {
@@ -69,6 +96,7 @@ export default class LogIn extends React.Component {
         const isAdmin = user["isAdmin"];
 
         if (this.state.client.password === decryptedPassword && this.state.client.username === username) {
+            await this.setCookie()
             await this.setState({
                 client: {
                     name: user["name"],
@@ -79,7 +107,6 @@ export default class LogIn extends React.Component {
                     isAdmin: user["isAdmin"]
                 }
             })
-            await this.setCookie()
             alert("Successfully logged in...");
             if (isAdmin === "false") {
                 console.warn("User is logging in...");
@@ -100,7 +127,10 @@ export default class LogIn extends React.Component {
         // set cookie from config file
         const clientCookie = {
             username: this.state.client.username,
-            email: this.state.client.email
+            email: this.state.client.email,
+            lat: this.state.coords.lat,
+            lng: this.state.coords.lng,
+            address: this.state.coords.address
         }
         await localStorage.setItem("clientCookie", JSON.stringify(clientCookie));
     }

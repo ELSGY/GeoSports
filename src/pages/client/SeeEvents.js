@@ -51,24 +51,8 @@ export default class SeeEvents extends React.Component {
     }
 
     async componentDidMount() {
-
-        if (navigator.geolocation) {
-            await navigator.geolocation.getCurrentPosition(position => {
-                    this.setState({
-                            coords: {
-                                lat: position.coords.latitude,
-                                lng: position.coords.longitude
-                            }
-                        }, async () => {
-                            await this.getCookie();
-                            await this.fetchDefaultActivities(position.coords.latitude, position.coords.longitude)
-                        }, error => {
-                            console.error(error);
-                        }
-                    )
-                }
-            )
-        }
+        await this.getCookie();
+        await this.fetchDefaultActivities(this.state.coords.lat, this.state.coords.lng);
     }
 
     async setCoords(lat, lng) {
@@ -96,9 +80,12 @@ export default class SeeEvents extends React.Component {
             client: {
                 username: cookie.username,
                 email: cookie.email,
+            },
+            coords: {
+                lat: cookie.lat,
+                lng: cookie.lng
             }
         })
-
         // console.log(this.state.client.username)
     }
 
