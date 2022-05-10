@@ -378,7 +378,6 @@ export default class AddEvents extends React.Component {
                 resolve(reader.result)
             };
         })
-
     }
 
     async addEvent() {

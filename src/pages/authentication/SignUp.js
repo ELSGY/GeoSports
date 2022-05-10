@@ -23,11 +23,7 @@ export default class SignUp extends React.Component {
                 photo: '',
                 isAdmin: false
             },
-            webcamRef: React.createRef(),
-            webcamActive: false,
             refreshed: 1,
-            popupStatusMessage: '',
-            popupStatusType: '',
             alreadyExistEmail: ''
         }
 
@@ -37,10 +33,8 @@ export default class SignUp extends React.Component {
         this.updatePassword = this.updatePassword.bind(this);
         this.registerUser = this.registerUser.bind(this);
         this.encryptPassword = this.encryptPassword.bind(this);
-        this.takePhoto = this.takePhoto.bind(this);
-        this.activateCamera = this.activateCamera.bind(this);
-        this.deactivateCamera = this.deactivateCamera.bind(this);
-        this.updatePopupStatusMessage = this.updatePopupStatusMessage.bind(this);
+        this.updatePhoto = this.updatePhoto.bind(this);
+        this.convertFile = this.convertFile.bind(this);
     }
 
     async componentDidMount() {
@@ -48,14 +42,6 @@ export default class SignUp extends React.Component {
             localStorage.clear();
             window.location.reload(true);
         }
-    }
-
-    updatePopupStatusMessage(message, type) {
-        this.setState({
-                popupStatusMessage: message,
-                popupStatusType: type
-            }
-        )
     }
 
     async updateName(event) {
@@ -164,41 +150,36 @@ export default class SignUp extends React.Component {
         await localStorage.setItem("clientCookie", JSON.stringify(clientCookie));
     }
 
-    async takePhoto(event) {
-        event.preventDefault()
-        const image = this.state.webcamRef.current.getScreenshot();
-        // console.log(image)
+    async updatePhoto(event) {
+        const file = event.target.files[0];
+        const resultPhoto = await this.convertFile(file);
+        console.log(resultPhoto);
+
         await this.setState({
             client: {
                 name: this.state.client.name,
                 username: this.state.client.username,
                 email: this.state.client.email,
                 password: this.state.client.password,
-                photo: image,
+                photo: resultPhoto,
                 isAdmin: this.state.client.isAdmin
             }
         });
-        // this.updatePopupStatusMessage("fot", 'success');
-        // alert("Photo taken!", , )
-        alert("Photo taken!");
-    }
+        console.log(this.state);
+    };
 
-    activateCamera() {
-        this.setState({
-            webcamActive: true
-        })
-    }
+    convertFile(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
 
-    deactivateCamera() {
-        this.setState({
-            webcamActive: false
+            reader.onload = function () {
+                resolve(reader.result)
+            };
         })
     }
 
     render() {
-        const videoConstraints = {
-            facingMode: "client"
-        };
         return (
             <Route>
                 <div className="background-signin">
@@ -230,35 +211,16 @@ export default class SignUp extends React.Component {
                                        onChange={this.updatePassword}
                                        required/>
                             </div>
-                            {this.state.webcamActive ?
-                                <div className="inputBox">
-                                    <div>
-                                        <Webcam className="video" width={250} height={250}
-                                                videoConstraints={videoConstraints}
-                                                ref={this.state.webcamRef} screenshotFormat="image/jpeg"/>
-                                        <button type="submit" name="userPhoto" placeholder="your photo"
-                                                onClick={this.takePhoto}>Take photo
-                                        </button>
-                                        <button type="submit" name="userPhoto" placeholder="your photo"
-                                                onClick={this.deactivateCamera}>Close
-                                        </button>
-                                    </div>
-
-                                </div>
-                                :
-                                <button type="submit" name="userPhoto" placeholder="your photo"
-                                        onClick={this.activateCamera}>Upload photo
-                                </button>
-                            }
-                            <button type="submit" style={{float: "left"}}>Sign Up
+                            <div>
+                                <input type="file" id={"files"} onChange={this.updatePhoto}/>
+                            </div>
+                            <button type="submit" style={{float: "center"}}>Sign Up
                             </button>
                         </form>
-                        {/*!this.state.webcamActive ?*/}
                         <div>
                             <p className="login">Already have an account?</p>
                             <Link className={"linkButton"} to="/login"><p className="login">LOGIN</p></Link>
                         </div>
-
                     </main>
                 </div>
             </Route>
