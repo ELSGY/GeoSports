@@ -1,14 +1,9 @@
 import React from 'react';
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
     Link
 } from "react-router-dom";
-import SignUp from "../authentication/SignUp";
-import ActivityEnrollPage from "./ActivityEnrollPage";
 
-export default class SeeEvents extends React.Component {
+export default class SeeUnenrolledEvents extends React.Component {
 
     constructor(props) {
         super(props);
@@ -52,7 +47,7 @@ export default class SeeEvents extends React.Component {
 
     async componentDidMount() {
         await this.getCookie();
-        await this.fetchDefaultActivities(this.state.coords.lat, this.state.coords.lng);
+        await this.fetchDefaultActivities();
     }
 
     async setCoords(lat, lng) {
@@ -65,8 +60,8 @@ export default class SeeEvents extends React.Component {
         console.log(this.state.coords)
     }
 
-    async fetchDefaultActivities(lat, lng) {
-        await fetch("http://localhost:8080/activity/getDefaultActivitiesForUser/" + this.state.client.username + "/" + lat + "/" + lng)
+    async fetchDefaultActivities() {
+        await fetch("http://localhost:8080/activity/getUnenrolledActivitiesForUser/" + this.state.client.username)
             .then(res => res.json())
             .then(res => this.buildActivities(res));
     }
@@ -76,7 +71,7 @@ export default class SeeEvents extends React.Component {
         const clientCookie = await localStorage.getItem("clientCookie");
         const cookie = JSON.parse(clientCookie)
 
-        await this.setState({
+        this.setState({
             client: {
                 username: cookie.username,
                 email: cookie.email,
@@ -99,41 +94,28 @@ export default class SeeEvents extends React.Component {
 
     async sendEnrolledEmail(event) {
 
-        const activityId = event.target.id
-        await this.setState({
-            client: {
-                email: this.state.client.email,
-                username: this.state.client.username,
-                attending: this.state.activities[activityId]["name"]
-            }
-        })
+        const activityId = event.target.id;
 
-        await fetch("http://localhost:8080/mail/" + this.state.client.email + "/" + this.state.client.username + "/" + this.state.client.attending)
+        await fetch("http://localhost:8080/mail/" + this.state.client.email + "/" + this.state.client.username + "/" + this.state.activities[activityId]["name"])
             .then(() => alert("You've been enrolled!"))
             .catch(() => {
                 console.warn("E-mail address could not be found...")
             });
 
-        await fetch("http://localhost:8080/activity/userEnrolled/" + this.state.client.attending)
-            .catch(() => {
-                console.warn("Error updating activity...")
-            });
-
-        window.location.reload(true);
-
+        // window.location.reload(true);
     }
 
-    seeActivityDetails(event) {
+    async seeActivityDetails(event) {
         // console.log(event.target.id);
         const activityName = event.target.id;
-        this.setActivityCookie(activityName).then(() => console.warn("Cookie set"));
+        await this.setActivityCookie(activityName).then(() => console.warn("Cookie set"));
     }
 
     async setActivityCookie(eventName) {
         const activityCookie = {
             activityName: eventName
         }
-        await localStorage.setItem("activityCookie", JSON.stringify(activityCookie));
+        localStorage.setItem("activityCookie", JSON.stringify(activityCookie));
     }
 
     getActivityById(id) {
@@ -178,67 +160,8 @@ export default class SeeEvents extends React.Component {
                                     )
                                 })
                         }
-
-                        {/*<table>*/}
-                        {/*    <thead>*/}
-                        {/*    <tr>*/}
-                        {/*        <th>Name</th>*/}
-                        {/*        <th>Address</th>*/}
-                        {/*        <th>Category</th>*/}
-                        {/*        <th>Subcategory</th>*/}
-                        {/*        <th>Date</th>*/}
-                        {/*        <th width="10px">Time</th>*/}
-                        {/*        <th>Available places</th>*/}
-                        {/*    </tr>*/}
-                        {/*    {*/}
-                        {/*        this.state.activities.map((obj, index) => {*/}
-                        {/*            return (<tr key={index}>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["name"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["address"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["category"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["subcategory"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["date"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["time"]}*/}
-                        {/*                </td>*/}
-                        {/*                <td>*/}
-                        {/*                    {obj["avbPlaces"]}*/}
-                        {/*                </td>*/}
-                        {/*                {*/}
-                        {/*                    obj["avbPlaces"] === 0 ?*/}
-                        {/*                        (<td style={{background: "transparent"}}>*/}
-                        {/*                            <input type="submit" id={index} value="Unavailable"*/}
-                        {/*                                   style={{background: "rgb(221, 221, 221)"}}/>*/}
-
-                        {/*                        </td>)*/}
-                        {/*                        : (<td style={{background: "transparent"}}>*/}
-                        {/*                            <input type="submit" id={index} value="Enroll"*/}
-                        {/*                                   onClick={this.sendEnrolledEmail}/>*/}
-
-                        {/*                        </td>)*/}
-                        {/*                }*/}
-                        {/*            </tr>)*/}
-                        {/*        })*/}
-                        {/*    }*/}
-                        {/*    </thead>*/}
-                        {/*</table>*/}
                     </div>
                 </div>
-                {/*<Switch>*/}
-                {/*    <Route exact={true} path={"/user/seeActivityDetails"}>*/}
-                {/*        <ActivityEnrollPage/>*/}
-                {/*    </Route>*/}
-                {/*</Switch>*/}
             </div>
         )
     }

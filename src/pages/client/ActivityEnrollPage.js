@@ -1,6 +1,7 @@
 import React from 'react';
 import {GoogleMap, Marker, withGoogleMap, withScriptjs, DirectionsRenderer} from "react-google-maps";
 import dateFormat, {masks} from "dateformat";
+import {Link} from "react-router-dom";
 
 const google = window.google;
 
@@ -30,10 +31,10 @@ export default class ActivityEnrollPage extends React.Component {
                     address: "Nan",
                     date: "Nan",
                     time: "Nan",
-                    photo: ''
+                    photo: '',
+                    enrollCheck: 0
                 }
             ],
-            pastEvent: 0,
             destination: ''
         }
 
@@ -50,18 +51,7 @@ export default class ActivityEnrollPage extends React.Component {
         await this.getUserCookie();
         await this.getActivityCookie();
         await this.fetchActivity();
-        const now = new Date();
-        masks.hammerTime = 'yyyy-mm-dd';
-        const date = dateFormat(now, "hammerTime");
-        console.log(date);
-        if (date > this.state.activity.date) {
-            await this.setState({
-                API_key: this.state.API_key,
-                client: this.state.client,
-                activity: this.state.activity,
-                pastEvent: 1
-            });
-        }
+
         console.log(this.state);
         // await this.calcRoute();
         // console.log(google.maps.TransitMode.BUS)
@@ -72,7 +62,7 @@ export default class ActivityEnrollPage extends React.Component {
         const activityCookie = await localStorage.getItem("activityCookie");
         const cookie = JSON.parse(activityCookie)
 
-        await this.setState({
+        this.setState({
             client: this.state.client,
             activity: {
                 name: cookie.activityName
@@ -83,21 +73,16 @@ export default class ActivityEnrollPage extends React.Component {
     async getUserCookie() {
         // get cookie from localStorage
         const clientCookie = await localStorage.getItem("clientCookie");
-        const cookie = JSON.parse(clientCookie)
 
-        await this.setState({
-            client: {
-                username: cookie.username,
-                email: cookie.email,
-                lat: cookie.lat,
-                lng: cookie.lng,
-                address: cookie.address
-            }
+        const cookie = JSON.parse(clientCookie)
+        console.log(cookie)
+        this.setState({
+            client: cookie
         })
     }
 
     async fetchActivity() {
-        await fetch("http://localhost:8080/activity/getActivityByName/" + this.state.activity.name)
+        await fetch("http://localhost:8080/activity/getActivityByNameForUser/" + this.state.activity.name + "/" + this.state.client.username)
             .then(res => res.json())
             .then(res => this.buildActivities(res));
     }
@@ -107,24 +92,20 @@ export default class ActivityEnrollPage extends React.Component {
             API_key: this.state.API_key,
             client: this.state.client,
             activity: response,
-            pastEvent: this.state.pastEvent
         });
-        // console.log(this.state);
     }
 
-    async sendEnrolledEmail() {
-        await fetch("http://localhost:8080/mail/" + this.state.client.email + "/" + this.state.client.username + "/" + this.state.activity.name)
-            .then(() => alert("You've been enrolled!"))
-            .catch(() => {
-                console.warn("E-mail address could not be found...")
-            });
+    async sendEnrolledEmail(event) {
 
-        await fetch("http://localhost:8080/activity/userEnrolled/" + this.state.activity.name)
-            .catch(() => {
-                console.warn("Error updating activity...")
-            });
+        const activityId = event.target.id;
 
-        window.location.reload(true);
+        // await fetch("http://localhost:8080/mail/" + this.state.client.email + "/" + this.state.client.username + "/" + this.state.activities[activityId]["name"])
+        //     .then(() => alert("You've been enrolled!"))
+        //     .catch(() => {
+        //         console.warn("E-mail address could not be found...")
+        //     });
+
+        // window.location.reload(true);
     }
 
     async calcRoute() {
@@ -189,15 +170,14 @@ export default class ActivityEnrollPage extends React.Component {
                                         <h5 className={"actDetailsTitle2"}>Time : {this.state.activity["time"]}</h5>
                                         <h5 className={"actDetailsTitle2"}>Available places
                                             : {this.state.activity["avbPlaces"]}</h5>
-                                        {
-                                            this.state.paste === 1 ?
-                                                <input type="submit" value="Event closed"/> :
-                                                <input type="submit" value="Enroll" onClick={this.sendEnrolledEmail}/>
-                                        }
+                                        <div className={"actColumn2"}>
+                                            <Link className={"actLink2"}
+                                                  to={"/user/seeEvents"}
+                                                  onClick={this.sendEnrolledEmail}>Enroll</Link>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className={"activityMap"}>
-                                    {/*<FontAwesomeIcon icon="fa-solid fa-location-dot"/>*/}
                                     <div className="input">
                                         <label htmlFor="address">🚩 Starting point:</label>
                                         <input type="text" name="name" id="name" value={this.state.client["address"]}
@@ -214,7 +194,7 @@ export default class ActivityEnrollPage extends React.Component {
                                             <div style={{height: `100%`}}/>
                                         }
                                         containerElement={
-                                            <div style={{height: '330px'}}/>
+                                            <div style={{height: '430px'}}/>
                                         }
                                         mapElement={
                                             <div style={{height: `100%`}}/>

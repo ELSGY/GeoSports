@@ -8,7 +8,7 @@ import {
 import * as Icons from "react-icons/fa";
 import "./navbar.css";
 import {clientNavItems} from "./ClientNavItems";
-import SeeEvents from "../pages/client/SeeEvents";
+import SeeUnenrolledEvents from "../pages/client/SeeUnenrolledEvents";
 import SignUp from "../pages/authentication/SignUp";
 import ActivityEnrollPage from "../pages/client/ActivityEnrollPage";
 
@@ -34,7 +34,7 @@ export default class ClientSearchBar extends React.Component {
                     </nav>
                     <Switch>
                         <Route exact={true} path="/user/seeEvents">
-                            <SeeEvents/>
+                            <SeeUnenrolledEvents/>
                         </Route>
                         <Route exact={true} path="/user/seeActivityDetails">
                             <ActivityEnrollPage/>

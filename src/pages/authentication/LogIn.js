@@ -34,15 +34,6 @@ export default class LogIn extends React.Component {
         this.loginUser = this.loginUser.bind(this);
         this.setUser = this.setUser.bind(this);
         this.setCookie = this.setCookie.bind(this);
-        this.updatePopupStatusMessage = this.updatePopupStatusMessage.bind(this);
-    }
-
-    updatePopupStatusMessage(message, type) {
-        this.setState({
-                popupStatusMessage: message,
-                popupStatusType: type
-            }
-        )
     }
 
     async componentDidMount() {
@@ -94,9 +85,10 @@ export default class LogIn extends React.Component {
         const decryptedPassword = await this.decryptPassword(user["password"], user["username"]);
         const username = user["username"];
         const isAdmin = user["isAdmin"];
+        console.log(user)
 
         if (this.state.client.password === decryptedPassword && this.state.client.username === username) {
-            await this.setCookie()
+
             await this.setState({
                 client: {
                     name: user["name"],
@@ -107,6 +99,7 @@ export default class LogIn extends React.Component {
                     isAdmin: user["isAdmin"]
                 }
             })
+            await this.setCookie();
             alert("Successfully logged in...");
             if (isAdmin === "false") {
                 console.warn("User is logging in...");
