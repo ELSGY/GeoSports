@@ -2,13 +2,13 @@ export const clientNavItems = [
     {
         id: 1,
         title: "My events",
-        path: "/user/seeEvents",
+        path: "/user/myEvents",
         cName: "nav-item"
     },
     {
         id: 2,
         title: "Events",
-        path: "/user/seeEvents",
+        path: "/user/events",
         cName: "nav-item"
     },
     {

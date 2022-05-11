@@ -1,9 +1,7 @@
 import React from 'react';
-import {
-    Link
-} from "react-router-dom";
+import {Link} from "react-router-dom";
 
-export default class SeeUnenrolledEvents extends React.Component {
+export default class MyEvents extends React.Component {
 
     constructor(props) {
         super(props);
@@ -37,7 +35,6 @@ export default class SeeUnenrolledEvents extends React.Component {
 
         this.buildActivities = this.buildActivities.bind(this);
         this.getActivityById = this.getActivityById.bind(this);
-        this.sendEnrolledEmail = this.sendEnrolledEmail.bind(this);
         this.getCookie = this.getCookie.bind(this);
         this.fetchDefaultActivities = this.fetchDefaultActivities.bind(this)
         this.setCoords = this.setCoords.bind(this)
@@ -61,7 +58,7 @@ export default class SeeUnenrolledEvents extends React.Component {
     }
 
     async fetchDefaultActivities() {
-        await fetch("http://localhost:8080/activity/getUnenrolledActivitiesForUser/" + this.state.client.username)
+        await fetch("http://localhost:8080/activity/getEnrolledActivitiesForUser/" + this.state.client.username)
             .then(res => res.json())
             .then(res => this.buildActivities(res));
     }
@@ -86,23 +83,9 @@ export default class SeeUnenrolledEvents extends React.Component {
 
     async buildActivities(response) {
         console.log(response);
-
         await this.setState({
             activities: response
         })
-    }
-
-    async sendEnrolledEmail(event) {
-
-        const activityId = event.target.id;
-
-        await fetch("http://localhost:8080/mail/" + this.state.client.email + "/" + this.state.client.username + "/" + this.state.activities[activityId]["name"])
-            .then(() => alert("You've been enrolled!"))
-            .catch(() => {
-                console.warn("E-mail address could not be found...")
-            });
-
-        // window.location.reload(true);
     }
 
     async seeActivityDetails(event) {
@@ -151,7 +134,7 @@ export default class SeeUnenrolledEvents extends React.Component {
                                                 </div>
                                                 <div className={"actColumn1"}>
                                                     <Link className={"actLink"}
-                                                          to={"/user/seeActivityDetails"}
+                                                          to={"/user/myEventsDetails"}
                                                           id={obj["name"]}
                                                           onClick={this.seeActivityDetails}>Details</Link>
                                                 </div>

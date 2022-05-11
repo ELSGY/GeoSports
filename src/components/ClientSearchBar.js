@@ -1,16 +1,13 @@
 import React from 'react';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
+import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
 import * as Icons from "react-icons/fa";
 import "./navbar.css";
 import {clientNavItems} from "./ClientNavItems";
-import SeeUnenrolledEvents from "../pages/client/SeeUnenrolledEvents";
+import Events from "../pages/client/Events";
+import MyEvents from "../pages/client/MyEvents";
 import SignUp from "../pages/authentication/SignUp";
-import ActivityEnrollPage from "../pages/client/ActivityEnrollPage";
+import EventsDetails from "../pages/client/EventsDetails";
+import MyEventsDetails from "../pages/client/MyEventsDetails";
 
 export default class ClientSearchBar extends React.Component {
     render() {
@@ -33,11 +30,17 @@ export default class ClientSearchBar extends React.Component {
                         </ul>
                     </nav>
                     <Switch>
-                        <Route exact={true} path="/user/seeEvents">
-                            <SeeUnenrolledEvents/>
+                        <Route exact={true} path="/user/events">
+                            <Events/>
                         </Route>
-                        <Route exact={true} path="/user/seeActivityDetails">
-                            <ActivityEnrollPage/>
+                        <Route exact={true} path="/user/myEvents">
+                            <MyEvents/>
+                        </Route>
+                        <Route exact={true} path="/user/eventsDetails">
+                            <EventsDetails/>
+                        </Route>
+                        <Route exact={true} path="/user/myEventsDetails">
+                            <MyEventsDetails/>
                         </Route>
                         <Route exact={true} path="/">
                             <SignUp/>

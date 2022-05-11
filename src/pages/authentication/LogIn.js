@@ -68,7 +68,7 @@ export default class LogIn extends React.Component {
             .then(r => {
                 console.log(r);
                 if (r === "user") {
-                    this.props.history.push("/user/seeEvents")
+                    this.props.history.push("/user/events")
                 } else if (r === "admin") {
                     this.props.history.push("/admin/manageEvents")
                 } else {

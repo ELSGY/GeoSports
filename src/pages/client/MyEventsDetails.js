@@ -1,11 +1,10 @@
 import React from 'react';
-import {GoogleMap, Marker, withGoogleMap, withScriptjs, DirectionsRenderer} from "react-google-maps";
-import dateFormat, {masks} from "dateformat";
+import {DirectionsRenderer, GoogleMap, Marker, withGoogleMap, withScriptjs} from "react-google-maps";
 import {Link} from "react-router-dom";
 
 const google = window.google;
 
-export default class ActivityEnrollPage extends React.Component {
+export default class MyEventsDetails extends React.Component {
 
     constructor(props) {
         super(props);
@@ -42,8 +41,8 @@ export default class ActivityEnrollPage extends React.Component {
         this.fetchActivity = this.fetchActivity.bind(this);
         this.getActivityCookie = this.getActivityCookie.bind(this);
         this.getUserCookie = this.getUserCookie.bind(this);
-        this.sendEnrolledEmail = this.sendEnrolledEmail.bind(this);
         this.calcRoute = this.calcRoute.bind(this);
+        this.sendUnenrolledEmail = this.sendUnenrolledEmail.bind(this);
 
     }
 
@@ -95,17 +94,14 @@ export default class ActivityEnrollPage extends React.Component {
         });
     }
 
-    async sendEnrolledEmail(event) {
+    async sendUnenrolledEmail() {
+        await fetch("http://localhost:8080/mail/unsubscribe/" + this.state.client.email + "/" + this.state.client.username + "/" + this.state.activity.name)
+            .then(() => alert("You've been unenrolled!"))
+            .catch(() => {
+                console.warn("E-mail address could not be found...")
+            });
 
-        const activityId = event.target.id;
-
-        // await fetch("http://localhost:8080/mail/" + this.state.client.email + "/" + this.state.client.username + "/" + this.state.activities[activityId]["name"])
-        //     .then(() => alert("You've been enrolled!"))
-        //     .catch(() => {
-        //         console.warn("E-mail address could not be found...")
-        //     });
-
-        // window.location.reload(true);
+        window.location.reload();
     }
 
     async calcRoute() {
@@ -172,8 +168,8 @@ export default class ActivityEnrollPage extends React.Component {
                                             : {this.state.activity["avbPlaces"]}</h5>
                                         <div className={"actColumn2"}>
                                             <Link className={"actLink2"}
-                                                  to={"/user/seeEvents"}
-                                                  onClick={this.sendEnrolledEmail}>Enroll</Link>
+                                                  to={"/user/myEvents"}
+                                                  onClick={this.sendUnenrolledEmail}>Leave event</Link>
                                         </div>
                                     </div>
                                 </div>
@@ -202,7 +198,6 @@ export default class ActivityEnrollPage extends React.Component {
                                     />
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
