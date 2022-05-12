@@ -1,11 +1,7 @@
 import React from 'react';
 import '../../App.css';
-import Webcam from "react-webcam";
 import API from "../../API";
-import {
-    Link,
-    Route
-} from "react-router-dom";
+import {Link, Route} from "react-router-dom";
 
 const CryptoJS = require("crypto-js")
 
@@ -24,7 +20,8 @@ export default class SignUp extends React.Component {
                 isAdmin: false
             },
             refreshed: 1,
-            alreadyExistEmail: ''
+            alreadyExistEmail: '',
+            alreadyExistUsername: ''
         }
 
         this.updateName = this.updateName.bind(this);
@@ -102,11 +99,21 @@ export default class SignUp extends React.Component {
             .then(r => r.json())
             .then(r => this.setState({alreadyExistEmail: r["email"]}))
 
-        console.log(this.state.alreadyExistEmail);
+        await fetch("http://localhost:8080/user/getUserByUsername/" + this.state.client.username)
+            .then(r => r.json())
+            .then(r => this.setState({alreadyExistUsername: r["username"]}))
 
-        if (this.state.alreadyExistEmail.length > 6) {
+        console.log(this.state);
+
+        if (this.state.alreadyExistEmail.length >= 2 && this.state.alreadyExistUsername.length >= 2) {
             console.log("Account already exists!")
             alert("Account already exists!")
+        } else if (this.state.alreadyExistEmail.length >= 2) {
+            console.log("Account already exists!")
+            alert("This email already exists!")
+        } else if (this.state.alreadyExistUsername.length >= 2) {
+            console.log("Account already exists!")
+            alert("This username already exists!")
         } else {
             const encryptedPassword = this.encryptPassword();
 

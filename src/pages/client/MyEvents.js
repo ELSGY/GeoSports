@@ -18,17 +18,17 @@ export default class MyEvents extends React.Component {
             },
             activities: [
                 {
-                    id: 0,
-                    name: "Nan",
-                    latitude: 0,
-                    longitude: 0,
-                    avbPlaces: 0,
-                    category: "Nan",
-                    subcategory: "Nan",
-                    address: "Nan",
-                    date: "Nan",
-                    time: "Nan",
-                    attending: 0
+                    id: undefined,
+                    name: undefined,
+                    latitude: undefined,
+                    longitude: undefined,
+                    avbPlaces: undefined,
+                    category: undefined,
+                    subcategory: undefined,
+                    address: undefined,
+                    date: undefined,
+                    time: undefined,
+                    attending: undefined
                 }
             ]
         }
@@ -111,7 +111,7 @@ export default class MyEvents extends React.Component {
                 <div className="main">
                     <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000, height: '90%'}}>
                         {
-                            this.state.activities.name === "Nan" ?
+                            this.state.activities[0].name === undefined ?
                                 <div className={"noEvents"}>
                                     <div className={"noEventsImg"}/>
                                     <h2 className={"noEventsMessage"}>No events found </h2>
