@@ -1,4 +1,5 @@
 import React from 'react';
+import image from "E:\\Faculta\\Proiect Licenta\\FrontEnd\\src\\images\\user.png"
 
 export default class Search extends React.Component {
 
@@ -11,8 +12,9 @@ export default class Search extends React.Component {
                 name: '',
                 username: '',
                 email: '',
-                photo: ''
-            }
+                photo: null
+            },
+            activityName: ''
         }
 
         this.fetchClientDetails = this.fetchClientDetails.bind(this);
@@ -28,8 +30,6 @@ export default class Search extends React.Component {
     }
 
     async setDetails(response) {
-
-
         const image = new Image();
         image.src = response["photo"];
         // document.body.appendChild(image);
@@ -41,7 +41,8 @@ export default class Search extends React.Component {
                 username: response["username"],
                 email: response["email"],
                 photo: image
-            }
+            },
+            activityName: response["activityName"]
         });
         // console.log(this.state.client)
     }
@@ -56,7 +57,6 @@ export default class Search extends React.Component {
     render() {
         return (
             <div className="background">
-
                 <div className="main">
                     <form onSubmit={this.fetchClientDetails}>
                         <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000}}>
@@ -67,33 +67,44 @@ export default class Search extends React.Component {
                             <div className="input">
                                 <input type="submit" name="name" id="name" value="Search client"/>
                             </div>
-
                             {this.state.client.name && this.state.client.username && this.state.client.email ?
-                                (<div>
-                                        {
-                                            this.state.client.photo  ?
-                                                <img src={this.state.client.photo.src} width="330" height="250"
-                                                     alt={"No photo available for this user"}/> : null
-                                        }
-                                        <div className="input">
-
-                                            <label htmlFor="ticketCode">Name</label>
-                                            <input type="text" name="Name" id="Name" value={this.state.client.name}
-                                                   readOnly/>
-                                            <label htmlFor="ticketCode">Username</label>
-                                            <input type="text" name="Username" id="Username"
-                                                   value={this.state.client.username} readOnly/>
-                                            <label htmlFor="ticketCode">Email</label>
-                                            <input type="text" name="Email" id="Email" value={this.state.client.email}
-                                                   readOnly/>
+                                (<div className={"searchDetailsAll"}>
+                                        <div className={"activityDetails"}>
+                                            <div className={"actDetailsColumn"}>
+                                                {this.state.client.photo.length > 0 ?
+                                                    <img className={"searchPhoto"} src={this.state.client.photo.src}
+                                                         alt={""}/> :
+                                                    <img
+                                                        className={"searchPhoto"}
+                                                        src={image}
+                                                        alt={""}/>
+                                                }
+                                                <div className={"text"}>
+                                                    <h3 className={"actDetailsTitle3"}>Ticket
+                                                        to : {this.state.activityName}</h3>
+                                                    <h5 className={"actDetailsTitle2"}>Full name
+                                                        : <input type="text" name="Name" id="Name"
+                                                                 value={this.state.client.name}
+                                                                 readOnly/></h5>
+                                                    <h5 className={"actDetailsTitle2"}>Username
+                                                        : <input type="text" name="Username" id="Username"
+                                                                 value={this.state.client.username} readOnly/></h5>
+                                                    <h5 className={"actDetailsTitle2"}>Email
+                                                        : <input type="text" name="Email" id="Email"
+                                                                 value={this.state.client.email}
+                                                                 readOnly/></h5>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 ) : null
                             }
+
                         </div>
                     </form>
                 </div>
             </div>
-        );
+        )
+            ;
     }
 }

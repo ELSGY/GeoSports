@@ -140,7 +140,7 @@ export default class SignUp extends React.Component {
                     console.log(error)
                 });
             alert("Your account was created!")
-            this.props.history.push("/user/seeEvents");
+            this.props.history.push("/user/events");
         }
     }
 
