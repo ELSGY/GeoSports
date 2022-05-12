@@ -1,5 +1,5 @@
 import React from 'react';
-import {DirectionsRenderer, GoogleMap, Marker, withGoogleMap, withScriptjs} from "react-google-maps";
+import {DirectionsRenderer, GoogleMap, withGoogleMap, withScriptjs} from "react-google-maps";
 import {Link} from "react-router-dom";
 
 const google = window.google;
@@ -34,7 +34,8 @@ export default class MyEventsDetails extends React.Component {
                     enrollCheck: 0
                 }
             ],
-            destination: ''
+            destination: '',
+            travelMode: ''
         }
 
         this.buildActivities = this.buildActivities.bind(this);
@@ -43,7 +44,7 @@ export default class MyEventsDetails extends React.Component {
         this.getUserCookie = this.getUserCookie.bind(this);
         this.calcRoute = this.calcRoute.bind(this);
         this.sendUnenrolledEmail = this.sendUnenrolledEmail.bind(this);
-
+        this.updateTravelMode = this.updateTravelMode.bind(this);
     }
 
     async componentDidMount() {
@@ -51,9 +52,10 @@ export default class MyEventsDetails extends React.Component {
         await this.getActivityCookie();
         await this.fetchActivity();
 
-        console.log(this.state);
-        // await this.calcRoute();
-        // console.log(google.maps.TransitMode.BUS)
+        // console.log(this.state);
+        await this.calcRoute().then((result) => this.setState({
+            destination: result
+        }));
     }
 
     async getActivityCookie() {
@@ -91,6 +93,7 @@ export default class MyEventsDetails extends React.Component {
             API_key: this.state.API_key,
             client: this.state.client,
             activity: response,
+            travelMode: 'DRIVING'
         });
     }
 
@@ -105,17 +108,21 @@ export default class MyEventsDetails extends React.Component {
     }
 
     async calcRoute() {
-
         const directionService = new google.maps.DirectionsService();
-        const result = directionService.route({
+        return directionService.route({
             origin: this.state.client.address,
             destination: this.state.activity.address,
-            travelMode: google.maps.TravelMode.DRIVING
+            travelMode: this.state.travelMode
         });
-        console.log(result);
-        await this.setState({
-            destination: result
+    }
+
+    async updateTravelMode(e) {
+        // console.log(e.target.value)
+        const travelMode = e.target.value;
+        this.setState({
+            travelMode: travelMode
         })
+       await this.calcRoute();
     }
 
     render() {
@@ -128,20 +135,6 @@ export default class MyEventsDetails extends React.Component {
                         mapTypeId={'roadmap'}
                     >
                         <DirectionsRenderer directions={this.state.destination}/>
-                        {/*Marker*/}
-                        <Marker
-                            google={this.props.google}
-                            draggable={false}
-                            position={{lat: this.state.activity.latitude, lng: this.state.activity.longitude}}
-                        />
-                        <Marker/>
-                        <Marker
-                            google={this.props.google}
-                            draggable={false}
-                            position={{lat: this.state.client.lat, lng: this.state.client.lng}}
-                            // icon={'🏁'}
-                        />
-                        <Marker/>
                     </GoogleMap>
                 )
             )
@@ -175,14 +168,23 @@ export default class MyEventsDetails extends React.Component {
                                 </div>
                                 <div className={"activityMap"}>
                                     <div className="input">
-                                        <label htmlFor="address">🚩 Starting point:</label>
+                                        <label htmlFor="address">🚩 You are here (A):</label>
                                         <input type="text" name="name" id="name" value={this.state.client["address"]}
                                                readOnly/>
                                     </div>
                                     <div className="input">
-                                        <label htmlFor="address">🏁 Destination point:</label>
+                                        <label htmlFor="address">🏁 Event takes place at (B):</label>
                                         <input type="text" name="name" id="name" value={this.state.activity["address"]}
                                                readOnly/>
+                                    </div>
+                                    <div className="input">
+                                        <label htmlFor="address">I want to get there by:</label>
+                                        <select className="category" onChange={this.updateTravelMode}>
+                                            <option value={'DRIVING'}>DRIVING</option>
+                                            <option value={'BICYCLING'}>BICYCLING</option>
+                                            <option value={'TRANSIT'}>TRANSIT</option>
+                                            <option value={'WALKING'}>WALKING</option>
+                                        </select>
                                     </div>
                                     <AsyncMap
                                         googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${this.state.API_key}&libraries=places`}
