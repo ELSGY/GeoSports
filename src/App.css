@@ -433,6 +433,23 @@ td {
     margin: 15px;
 }
 
+.pastActivities .activityDetailsImg2 {
+    width: 340px;
+    height: 220px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    /*margin: 15px;*/
+}
+
+.activityDetailsImg2 {
+    width: 340px;
+    height: 220px;
+    box-sizing: border-box;
+    /*padding-bottom: 8px;*/
+    border-radius: 8px;
+    margin: 15px;
+}
+
 .actDetailsColumn {
     display: flex;
 }
@@ -479,6 +496,39 @@ td {
     width: 340px;
     height: 340px;
     border-radius: 8px;
+}
+
+/*ACTIVITY DETAILS*/
+.pastActivities {
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    width: 100%;
+    /*height: 380px;*/
+    display: inline-block;
+    border-radius: 8px;
+    margin: auto auto 10px;
+}
+
+.stars {
+    font-size: 30px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.stars2 {
+    font-size: 30px;
+    margin-right: 10px;
+}
+
+.topNumber {
+    justify-content: center;
+    transform: translateY(23%);
+    opacity: 0.3;
+    font-size: 130px;
+    padding-left: 60px;
+    padding-right: 60px;
+    align-content: center;
 }
 
 

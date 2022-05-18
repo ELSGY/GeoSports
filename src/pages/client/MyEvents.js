@@ -111,7 +111,7 @@ export default class MyEvents extends React.Component {
                 <div className="main">
                     <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000, height: '90%'}}>
                         {
-                            this.state.activities[0].name === undefined ?
+                            this.state.activities.name === undefined ?
                                 <div className={"noEvents"}>
                                     <div className={"noEventsImg"}/>
                                     <h2 className={"noEventsMessage"}>No events found </h2>

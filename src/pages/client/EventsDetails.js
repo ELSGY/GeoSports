@@ -2,7 +2,7 @@ import React from 'react';
 import {DirectionsRenderer, GoogleMap, withGoogleMap, withScriptjs} from "react-google-maps";
 import {Link} from "react-router-dom";
 
-const google = window.google;
+let google;
 
 export default class EventsDetails extends React.Component {
 
@@ -48,6 +48,7 @@ export default class EventsDetails extends React.Component {
     }
 
     async componentDidMount() {
+        google = await window.google;
         await this.getUserCookie();
         await this.getActivityCookie();
         await this.fetchActivity();

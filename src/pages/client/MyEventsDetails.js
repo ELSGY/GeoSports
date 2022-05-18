@@ -2,7 +2,7 @@ import React from 'react';
 import {DirectionsRenderer, GoogleMap, withGoogleMap, withScriptjs} from "react-google-maps";
 import {Link} from "react-router-dom";
 
-const google = window.google;
+let google;
 
 export default class MyEventsDetails extends React.Component {
 
@@ -48,9 +48,14 @@ export default class MyEventsDetails extends React.Component {
     }
 
     async componentDidMount() {
+        google = await window.google;
         await this.getUserCookie();
         await this.getActivityCookie();
         await this.fetchActivity();
+
+        // setTimeout(function () {
+        //     window.location.reload(1);
+        // }, 5000);
 
         // console.log(this.state);
         await this.calcRoute().then((result) => this.setState({
@@ -122,7 +127,7 @@ export default class MyEventsDetails extends React.Component {
         this.setState({
             travelMode: travelMode
         })
-       await this.calcRoute();
+        await this.calcRoute();
     }
 
     render() {

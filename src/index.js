@@ -13,9 +13,11 @@ ReactDOM.render(
             <Route exact={true} path={"/login"} component={LogIn}/>
             <Route exact={true} path={"/admin/manageEvents"} component={AdminSearchBar}/>
             <Route exact={true} path={"/admin/addEvents"} component={AdminSearchBar}/>
+            <Route exact={true} path={"/admin/top"} component={AdminSearchBar}/>
             <Route exact={true} path={"/admin/searchClient"} component={AdminSearchBar}/>
             <Route exact={true} path={"/user/events"} component={ClientSearchBar}/>
             <Route exact={true} path={"/user/myEvents"} component={ClientSearchBar}/>
+            <Route exact={true} path={"/user/pastEvents"} component={ClientSearchBar}/>
             <Route exact={true} path={"/user/eventsDetails"} component={ClientSearchBar}/>
             <Route exact={true} path={"/user/myEventsDetails"} component={ClientSearchBar}/>
         </Switch>

@@ -8,6 +8,7 @@ import MyEvents from "../pages/client/MyEvents";
 import SignUp from "../pages/authentication/SignUp";
 import EventsDetails from "../pages/client/EventsDetails";
 import MyEventsDetails from "../pages/client/MyEventsDetails";
+import PastEvents from "../pages/client/PastEvents";
 
 export default class ClientSearchBar extends React.Component {
     render() {
@@ -35,6 +36,9 @@ export default class ClientSearchBar extends React.Component {
                         </Route>
                         <Route exact={true} path="/user/myEvents">
                             <MyEvents/>
+                        </Route>
+                        <Route exact={true} path="/user/pastEvents">
+                            <PastEvents/>
                         </Route>
                         <Route exact={true} path="/user/eventsDetails">
                             <EventsDetails/>
