@@ -16,21 +16,7 @@ export default class Events extends React.Component {
                 lat: 0,
                 lng: 0
             },
-            activities: [
-                {
-                    id: undefined,
-                    name: undefined,
-                    latitude: undefined,
-                    longitude: undefined,
-                    avbPlaces: undefined,
-                    category: undefined,
-                    subcategory: undefined,
-                    address: undefined,
-                    date: undefined,
-                    time: undefined,
-                    attending: undefined
-                }
-            ]
+            activities: []
         }
 
         this.buildActivities = this.buildActivities.bind(this);
@@ -60,7 +46,10 @@ export default class Events extends React.Component {
     async fetchDefaultActivities() {
         await fetch("http://localhost:8080/activity/getUnenrolledActivitiesForUser/" + this.state.client.username)
             .then(res => res.json())
-            .then(res => this.buildActivities(res));
+            .then(res => this.buildActivities(res))
+            .catch(() => {
+                console.warn("No events available...");
+            });
     }
 
     async getCookie() {
@@ -112,10 +101,10 @@ export default class Events extends React.Component {
                 <div className="main">
                     <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000, height: '90%'}}>
                         {
-                            this.state.activities[0].name === undefined ?
+                            this.state.activities.length < 1 ?
                                 <div className={"noEvents"}>
                                     <div className={"noEventsImg"}/>
-                                    <h2 className={"noEventsMessage"}>No events found</h2>
+                                    <h2 className={"noEventsMessage"}>No future events found</h2>
                                 </div>
                                 :
                                 this.state.activities.map((obj, index) => {

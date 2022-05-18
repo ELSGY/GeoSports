@@ -21,23 +21,7 @@ export default class PastEvents extends React.Component {
                 lat: 0,
                 lng: 0
             },
-            activities: [
-                {
-                    id: undefined,
-                    name: undefined,
-                    latitude: undefined,
-                    longitude: undefined,
-                    avbPlaces: undefined,
-                    category: undefined,
-                    subcategory: undefined,
-                    address: undefined,
-                    date: undefined,
-                    time: undefined,
-                    attending: undefined,
-                    currentValue: 0,
-                    hoverValue: undefined
-                }
-            ]
+            activities: []
         }
 
         this.buildActivities = this.buildActivities.bind(this);
@@ -208,10 +192,10 @@ export default class PastEvents extends React.Component {
                 <div className="main">
                     <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000, height: '90%'}}>
                         {
-                            this.state.activities[0].name === undefined ?
+                            this.state.activities.length < 1 ?
                                 <div className={"noEvents"}>
                                     <div className={"noEventsImg"}/>
-                                    <h2 className={"noEventsMessage"}>No past events found </h2>
+                                    <h2 className={"noEventsMessage"}>Nothing to rate yet</h2>
                                 </div>
                                 :
                                 this.state.activities.map((obj, index1) => {

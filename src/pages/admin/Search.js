@@ -26,10 +26,12 @@ export default class Search extends React.Component {
         event.preventDefault();
         await fetch("http://localhost:8080/user/getUserByPVKey/" + this.state.code)
             .then(res => res.json())
-            .then(res => this.setDetails(res));
+            .then(res => this.setDetails(res))
+            .catch(() => alert("Couldn't find ticket!!"));
     }
 
     async setDetails(response) {
+        console.log(response)
         const image = new Image();
         image.src = response["photo"];
         // document.body.appendChild(image);
@@ -71,7 +73,7 @@ export default class Search extends React.Component {
                                 (<div className={"searchDetailsAll"}>
                                         <div className={"activityDetails"}>
                                             <div className={"actDetailsColumn"}>
-                                                {this.state.client.photo.length > 0 ?
+                                                {this.state.client.photo.src.length > 300 ?
                                                     <img className={"searchPhoto"} src={this.state.client.photo.src}
                                                          alt={""}/> :
                                                     <img

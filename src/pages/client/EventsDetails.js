@@ -87,7 +87,10 @@ export default class EventsDetails extends React.Component {
     async fetchActivity() {
         await fetch("http://localhost:8080/activity/getActivityByNameForUser/" + this.state.activity.name + "/" + this.state.client.username)
             .then(res => res.json())
-            .then(res => this.buildActivities(res));
+            .then(res => this.buildActivities(res))
+            .catch(() => {
+                console.warn("No events available...");
+            });
     }
 
     async buildActivities(response) {
