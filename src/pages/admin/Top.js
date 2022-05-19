@@ -1,5 +1,6 @@
 import React from 'react';
 import {FaStar} from "react-icons/all";
+import image from "E:\\Faculta\\Proiect Licenta\\FrontEnd\\src\\images\\event.PNG"
 
 const colors = {
     orange: "FFBA5A",
@@ -21,23 +22,7 @@ export default class Top extends React.Component {
                 lat: 0,
                 lng: 0
             },
-            activities: [
-                {
-                    id: undefined,
-                    name: undefined,
-                    latitude: undefined,
-                    longitude: undefined,
-                    avbPlaces: undefined,
-                    category: undefined,
-                    subcategory: undefined,
-                    address: undefined,
-                    date: undefined,
-                    time: undefined,
-                    attending: undefined,
-                    currentValue: 0,
-                    hoverValue: undefined
-                }
-            ]
+            activities: []
         }
 
         this.buildActivities = this.buildActivities.bind(this);
@@ -113,11 +98,18 @@ export default class Top extends React.Component {
                                                     <div className={"topNumber"}>
                                                         <label>{index1 + 1}</label>
                                                     </div>
+                                                    {
+                                                        obj["photo"] !== '' ?
+                                                            <img className={"activityDetailsImg2"}
+                                                                 src={obj["photo"]}
+                                                                 alt={""}
+                                                                 key={index1}/> :
+                                                            <img className={"activityDetailsImg2"}
+                                                                 src={image}
+                                                                 alt={""}
+                                                                 key={index1}/>
+                                                    }
 
-                                                    <img className={"activityDetailsImg2"}
-                                                         src={obj["photo"]}
-                                                         alt={""}
-                                                         key={index1}/>
                                                     <div className={"text"}>
                                                         <h2 className={"actDetailsTitle1"}>{obj["name"]}</h2>
                                                         <h3 className={"actDetailsTitle2"}>Location

@@ -1,6 +1,7 @@
 import React from 'react';
 import {DirectionsRenderer, GoogleMap, withGoogleMap, withScriptjs} from "react-google-maps";
 import {Link} from "react-router-dom";
+import image from "E:\\Faculta\\Proiect Licenta\\FrontEnd\\src\\images\\event.PNG";
 
 let google;
 
@@ -45,10 +46,11 @@ export default class MyEventsDetails extends React.Component {
         this.calcRoute = this.calcRoute.bind(this);
         this.sendUnenrolledEmail = this.sendUnenrolledEmail.bind(this);
         this.updateTravelMode = this.updateTravelMode.bind(this);
+        this.getMaps = this.getMaps.bind(this);
     }
 
     async componentDidMount() {
-        google = await window.google;
+        await this.getMaps()
         await this.getUserCookie();
         await this.getActivityCookie();
         await this.fetchActivity();
@@ -58,9 +60,16 @@ export default class MyEventsDetails extends React.Component {
         // }, 5000);
 
         // console.log(this.state);
-        await this.calcRoute().then((result) => this.setState({
-            destination: result
-        }));
+        await this.calcRoute()
+            .then((result) => this.setState({
+                destination: result
+            })).catch(() => {
+                console.warn("Couldn't retrieve maps...")
+            });
+    }
+
+    async getMaps() {
+        google = await window.google;
     }
 
     async getActivityCookie() {
@@ -154,9 +163,14 @@ export default class MyEventsDetails extends React.Component {
                         <div className={"activityDetailsAll"}>
                             <div className={"activityDetails"}>
                                 <div className={"actDetailsColumn"}>
-                                    <img className={"activityDetailsImg"}
-                                         src={this.state.activity["photo"]}
-                                         alt={""}/>
+                                    {this.state.activity["photo"] !== '' ?
+                                        (<img className={"activityDetailsImg"}
+                                              src={this.state.activity["photo"]}
+                                              alt={""}/>) :
+                                        (<img className={"activityDetailsImg"}
+                                              src={image}
+                                              alt={""}/>)
+                                    }
                                     <div className={"text"}>
                                         <h3 className={"actDetailsTitle1"}>{this.state.activity["name"]}</h3>
                                         <h5 className={"actDetailsTitle2"}>Location

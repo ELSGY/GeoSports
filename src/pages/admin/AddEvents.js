@@ -5,6 +5,7 @@ import Geocode from "react-geocode";
 import Autocomplete from 'react-google-autocomplete';
 import API from "../../API";
 import dateFormat, {masks} from "dateformat";
+import image from "E:\\Faculta\\Proiect Licenta\\FrontEnd\\src\\images\\event.PNG";
 
 Geocode["setApiKey"]("AIzaSyC9-oir9k71wA2xOmZD9d-UNe_2e5Gmtqw");
 Geocode["enableDebug"]();
@@ -408,7 +409,7 @@ export default class AddEvents extends React.Component {
     render() {
         const AsyncMap = withScriptjs(
             withGoogleMap(
-                props => (
+                () => (
                     <GoogleMap
                         defaultZoom={this.state.zoom}
                         defaultCenter={{lat: this.state.mapPosition.lat, lng: this.state.mapPosition.lng}}

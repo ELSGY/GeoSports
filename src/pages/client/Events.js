@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import image from "E:\\Faculta\\Proiect Licenta\\FrontEnd\\src\\images\\event.PNG"
 
 export default class Events extends React.Component {
 
@@ -112,10 +113,16 @@ export default class Events extends React.Component {
                                         <div className={"activities"}>
                                             <div id={obj["name"]} className={"activity"}>
                                                 <div className={"actColumn"}>
-                                                    <img className={"activityImg"}
-                                                         src={obj["photo"]}
-                                                         alt={""}/>
-                                                </div>
+                                                    {obj["photo"].length > 200 ?
+                                                        (<img className={"activityImg"}
+                                                              src={obj["photo"]}
+                                                              alt={""}/>) :
+                                                        (<img
+                                                            className={"activityImg"}
+                                                            src={image}
+                                                            alt={""}/>)
+                                                    }
+                                                < /div>
                                                 <div className={"actColumn"}>
                                                     <h3 className={"actTitle1"}>{obj["name"]}</h3>
                                                 </div>

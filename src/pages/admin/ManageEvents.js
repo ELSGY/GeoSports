@@ -6,20 +6,7 @@ export default class ManageEvents extends React.Component {
         super(props);
 
         this.state = {
-            activities: [
-                {
-                    id: 0,
-                    name: "NaN",
-                    latitude: 0,
-                    longitude: 0,
-                    avbPlaces: 0,
-                    category: "",
-                    subcategory: "",
-                    address: "",
-                    date: "",
-                    time: ""
-                }
-            ],
+            activities: [],
             onUpdate: {
                 name: "",
                 avbPlaces: "",
@@ -35,6 +22,7 @@ export default class ManageEvents extends React.Component {
         this.updateParticipants = this.updateParticipants.bind(this);
         this.getActivityById = this.getActivityById.bind(this);
         this.updateActivity = this.updateActivity.bind(this);
+        this.deleteActivity = this.deleteActivity.bind(this);
     }
 
     componentDidMount() {
@@ -44,6 +32,15 @@ export default class ManageEvents extends React.Component {
             .catch(() => {
                 console.warn("No activities found...")
             });
+    }
+
+    async deleteActivity(event) {
+        const activityId = event.target.id
+        fetch("http://localhost:8080/activity/deleteActivity/" + activityId)
+            .catch(() => {
+                console.error("Couldn't delete activity...")
+            });
+        window.location.reload(true);
     }
 
     async buildActivities(response) {
@@ -58,7 +55,7 @@ export default class ManageEvents extends React.Component {
             this.setState({
                 activities: activities
             })
-            // console.log(this.state.activities);
+            console.log(this.state.activities);
         }
     }
 
@@ -151,40 +148,48 @@ export default class ManageEvents extends React.Component {
         return (
             <div className="background">
                 <div className="main">
-                    <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1000}}>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                {/*<th>Category</th>*/}
-                                {/*<th>Subcategory</th>*/}
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Available places</th>
-                                {/*<th>Action</th>*/}
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" placeholder={"type new name"} onChange={this.updateName}/>
-                                </td>
-                                <td>
-                                    <input type="date" onChange={this.updateDate}/>
-                                </td>
-                                <td>
-                                    <input type="time" onChange={this.updateTime}/>
-                                </td>
-                                <td>
-                                    <input type="text" placeholder={"type new number"}
-                                           onChange={this.updateParticipants}/>
-                                </td>
-                            </tr>
-                            {this.state.activities ?
-                                (
+                    <div style={{padding: '1rem', margin: '0 auto', maxWidth: 1100}}>
+                        {this.state.activities.length < 1 ? <div className={"noEvents"}>
+                                <div className={"noEventsImg"}/>
+                                <h2 className={"noEventsMessage"}>No events to come</h2>
+                            </div> :
+                            (<table>
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Tickets</th>
+                                </tr>
+                                <tr>
+                                    <td style={{width: '100px', background: "transparent"}}>
+                                    </td>
+                                    <td style={{width: '130px'}}>
+                                        <input type="text" placeholder={"search new location"}
+                                               onChange={this.updateName}/>
+                                    </td>
+                                    <td style={{width: '7%'}}>
+                                        <input type="date" onChange={this.updateDate}/>
+                                    </td>
+                                    <td style={{width: '7%'}}>
+                                        <input type="time" onChange={this.updateTime}/>
+                                    </td>
+                                    <td style={{width: '9%'}}>
+                                        <input type="text" placeholder={"type"}
+                                               onChange={this.updateParticipants}/>
+                                    </td>
+                                </tr>
+                                {
                                     this.state.activities.map((obj, index) => {
                                         return (
                                             <tr key={index}>
                                                 <td>
                                                     <input type="text" id={index} value={obj["name"]}
+                                                           style={{align: "center"}} readOnly/>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id={index} value={obj["address"]}
                                                            readOnly/>
                                                 </td>
                                                 <td>
@@ -199,7 +204,7 @@ export default class ManageEvents extends React.Component {
                                                     <input type="number" id={index} value={obj["avbPlaces"]}
                                                            readOnly/>
                                                 </td>
-                                                <td style={{background: "transparent"}}>
+                                                <td style={{background: "transparent", width: '8%'}}>
                                                     {obj["name"] !== 'NaN' ?
                                                         (<input type="submit" id={index} value="Update"
                                                                 onClick={this.updateActivity}/>
@@ -208,16 +213,21 @@ export default class ManageEvents extends React.Component {
                                                         />)
                                                     }
                                                 </td>
+                                                <td style={{width: '8px', padding: '0px'}}>
+                                                    <h3 className={"deleteEvent"} id={obj["id"]}
+                                                        onClick={this.deleteActivity}>X</h3>
+                                                </td>
                                             </tr>
                                         )
                                     })
-                                ) : null
-                            }
-                            </thead>
-                        </table>
+                                }
+                                </thead>
+                            </table>)
+                        }
                     </div>
                 </div>
             </div>
         );
     }
+
 }
