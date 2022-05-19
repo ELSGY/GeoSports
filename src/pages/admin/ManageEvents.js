@@ -14,8 +14,8 @@ export default class ManageEvents extends React.Component {
                 avbPlaces: "",
                 date: "",
                 time: "",
-                lat: "",
-                lng: ""
+                lat: 0.0,
+                lng: 0.0
             }
         }
 
@@ -121,7 +121,7 @@ export default class ManageEvents extends React.Component {
                 lng: this.state.onUpdate.lng
             }
         });
-        // console.log(this.state.onUpdate);
+        console.log(this.state.onUpdate);
     }
 
     async updateLocation(place) {
@@ -190,7 +190,7 @@ export default class ManageEvents extends React.Component {
             });
         alert("Activity was updated!")
 
-        window.location.reload(true);
+        // window.location.reload(true);
     }
 
     render() {
@@ -212,7 +212,10 @@ export default class ManageEvents extends React.Component {
                                     <th>Tickets</th>
                                 </tr>
                                 <tr>
-                                    <td style={{width: '100px', background: "transparent"}}>
+                                    <td style={{width: '100px'}}>
+                                        <input type="text"
+                                               placeholder={"Type new name here"}
+                                               onChange={this.updateName}/>
                                     </td>
                                     <td style={{width: '130px'}}>
                                         <Autocomplete
@@ -235,7 +238,7 @@ export default class ManageEvents extends React.Component {
                                         <input type="time" onChange={this.updateTime}/>
                                     </td>
                                     <td style={{width: '9%'}}>
-                                        <input type="text" placeholder={"type"}
+                                        <input type="text" placeholder={"Type"}
                                                onChange={this.updateParticipants}/>
                                     </td>
                                 </tr>
