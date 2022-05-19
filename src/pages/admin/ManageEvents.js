@@ -1,4 +1,5 @@
 import React from 'react';
+import Autocomplete from 'react-google-autocomplete';
 
 export default class ManageEvents extends React.Component {
 
@@ -9,9 +10,12 @@ export default class ManageEvents extends React.Component {
             activities: [],
             onUpdate: {
                 name: "",
+                address: '',
                 avbPlaces: "",
                 date: "",
-                time: ""
+                time: "",
+                lat: "",
+                lng: ""
             }
         }
 
@@ -19,6 +23,7 @@ export default class ManageEvents extends React.Component {
         this.updateDate = this.updateDate.bind(this);
         this.updateTime = this.updateTime.bind(this);
         this.updateName = this.updateName.bind(this);
+        this.updateLocation = this.updateLocation.bind(this);
         this.updateParticipants = this.updateParticipants.bind(this);
         this.getActivityById = this.getActivityById.bind(this);
         this.updateActivity = this.updateActivity.bind(this);
@@ -63,9 +68,12 @@ export default class ManageEvents extends React.Component {
         await this.setState({
             onUpdate: {
                 name: this.state.onUpdate.name,
+                address: this.state.onUpdate.address,
                 avbPlaces: this.state.onUpdate.avbPlaces,
                 date: this.state.onUpdate.date,
-                time: event.target.value
+                time: event.target.value,
+                lat: this.state.onUpdate.lat,
+                lng: this.state.onUpdate.lng
             }
         });
         // console.log(this.state.onUpdate);
@@ -75,9 +83,12 @@ export default class ManageEvents extends React.Component {
         await this.setState({
             onUpdate: {
                 name: this.state.onUpdate.name,
+                address: this.state.onUpdate.address,
                 avbPlaces: this.state.onUpdate.avbPlaces,
                 date: event.target.value,
-                time: this.state.onUpdate.time
+                time: this.state.onUpdate.time,
+                lat: this.state.onUpdate.lat,
+                lng: this.state.onUpdate.lng
             }
         });
         // console.log(this.state.onUpdate);
@@ -87,9 +98,12 @@ export default class ManageEvents extends React.Component {
         await this.setState({
             onUpdate: {
                 name: this.state.onUpdate.name,
+                address: this.state.onUpdate.address,
                 avbPlaces: event.target.value,
                 date: this.state.onUpdate.date,
-                time: this.state.onUpdate.time
+                time: this.state.onUpdate.time,
+                lat: this.state.onUpdate.lat,
+                lng: this.state.onUpdate.lng
             }
         });
         // console.log(this.state.onUpdate);
@@ -99,12 +113,35 @@ export default class ManageEvents extends React.Component {
         await this.setState({
             onUpdate: {
                 name: event.target.value,
+                address: this.state.onUpdate.address,
                 avbPlaces: this.state.onUpdate.avbPlaces,
                 date: this.state.onUpdate.date,
-                time: this.state.onUpdate.time
+                time: this.state.onUpdate.time,
+                lat: this.state.onUpdate.lat,
+                lng: this.state.onUpdate.lng
             }
         });
         // console.log(this.state.onUpdate);
+    }
+
+    async updateLocation(place) {
+
+        const address = place["formatted_address"],
+            latValue = place["geometry"].location.lat(),
+            lngValue = place["geometry"].location.lng();
+
+        await this.setState({
+            onUpdate: {
+                name: this.state.onUpdate.name,
+                address: address,
+                avbPlaces: this.state.onUpdate.avbPlaces,
+                date: this.state.onUpdate.date,
+                time: this.state.onUpdate.time,
+                lat: latValue,
+                lng: lngValue
+            }
+        });
+        console.log(this.state.onUpdate);
     }
 
     async getActivityById(id) {
@@ -116,12 +153,18 @@ export default class ManageEvents extends React.Component {
         const activity = this.state.activities[index];
 
         const updatedName = this.state.onUpdate.name;
+        const updatedAddress = this.state.onUpdate.address;
         const updatedDate = this.state.onUpdate.date;
         const updatedTime = this.state.onUpdate.time;
         const updatedPlaces = this.state.onUpdate.avbPlaces;
+        const updatedLat = this.state.onUpdate.lat;
+        const updatedLng = this.state.onUpdate.lng;
 
         if (updatedName !== "") {
             activity['name'] = updatedName;
+        }
+        if (updatedAddress !== "") {
+            activity['address'] = updatedAddress;
         }
         if (updatedDate !== "") {
             activity['date'] = updatedDate;
@@ -132,10 +175,16 @@ export default class ManageEvents extends React.Component {
         if (updatedPlaces !== "") {
             activity['avbPlaces'] = updatedPlaces;
         }
+        if (updatedLat !== "") {
+            activity['lat'] = updatedLat;
+        }
+        if (updatedLng !== "") {
+            activity['lng'] = updatedLng;
+        }
 
         console.log(activity);
 
-        fetch("http://localhost:8080/activity/updateActivity/" + activity.name + "/" + activity.date + "/" + activity.time + "/" + activity.avbPlaces + "/" + activity.id)
+        fetch("http://localhost:8080/activity/updateActivity/" + activity.name + "/" + activity.address + "/" + activity.date + "/" + activity.time + "/" + activity.avbPlaces + "/" + activity.id + "/" + activity.lat + "/" + activity.lng)
             .catch(error => {
                 console.log(error)
             });
@@ -166,8 +215,18 @@ export default class ManageEvents extends React.Component {
                                     <td style={{width: '100px', background: "transparent"}}>
                                     </td>
                                     <td style={{width: '130px'}}>
-                                        <input type="text" placeholder={"search new location"}
-                                               onChange={this.updateName}/>
+                                        <Autocomplete
+                                            style={{
+                                                width: '100%',
+                                                height: '40px',
+                                                paddingLeft: '16px',
+                                                border: 'none',
+                                                borderRadius: '4px',
+                                                backgroundColor: '#f1f1f1'
+                                            }}
+                                            apiKey={"AIzaSyC9-oir9k71wA2xOmZD9d-UNe_2e5Gmtqw"}
+                                            onPlaceSelected={(place) => this.updateLocation(place)}
+                                        />
                                     </td>
                                     <td style={{width: '7%'}}>
                                         <input type="date" onChange={this.updateDate}/>
