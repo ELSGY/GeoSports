@@ -27,11 +27,11 @@ export default class Search extends React.Component {
         await fetch("http://localhost:8080/user/getUserByPVKey/" + this.state.code)
             .then(res => res.json())
             .then(res => this.setDetails(res))
-            .catch(() => alert("Couldn't find ticket!!"));
+            .catch(() => alert("Ticket doesn't exist"));
     }
 
     async setDetails(response) {
-        console.log(response)
+        // console.log(response)
         const image = new Image();
         image.src = response["photo"];
         // document.body.appendChild(image);
@@ -53,7 +53,7 @@ export default class Search extends React.Component {
         await this.setState({
             code: event.target.value
         });
-        console.log(event.target.value)
+        // console.log(event.target.value)
     }
 
     render() {

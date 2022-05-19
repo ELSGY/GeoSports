@@ -51,12 +51,15 @@ export default class Top extends React.Component {
     async fetchTop() {
         await fetch("http://localhost:8080/activity/getTopActivities")
             .then(res => res.json())
-            .then(res => this.buildActivities(res));
+            .then(res => this.buildActivities(res))
+            .catch(() => {
+                console.warn("No activities found...")
+            });
     }
 
 
     async buildActivities(response) {
-        console.log(response);
+        // console.log(response);
 
         const array = Array();
 

@@ -40,13 +40,16 @@ export default class ManageEvents extends React.Component {
     componentDidMount() {
         fetch("http://localhost:8080/activity/allActivities")
             .then(res => res.json())
-            .then(res => this.buildActivities(res));
+            .then(res => this.buildActivities(res))
+            .catch(() => {
+                console.warn("No activities found...")
+            });
     }
 
     async buildActivities(response) {
 
         const activities = []
-        console.log(response);
+        // console.log(response);
         if (response["status"] !== 500) {
             response.forEach(obj => {
                 activities.push(obj);
@@ -55,7 +58,7 @@ export default class ManageEvents extends React.Component {
             this.setState({
                 activities: activities
             })
-            console.log(this.state.activities);
+            // console.log(this.state.activities);
         }
     }
 
@@ -68,7 +71,7 @@ export default class ManageEvents extends React.Component {
                 time: event.target.value
             }
         });
-        console.log(this.state.onUpdate);
+        // console.log(this.state.onUpdate);
     }
 
     async updateDate(event) {
@@ -80,7 +83,7 @@ export default class ManageEvents extends React.Component {
                 time: this.state.onUpdate.time
             }
         });
-        console.log(this.state.onUpdate);
+        // console.log(this.state.onUpdate);
     }
 
     async updateParticipants(event) {
@@ -92,7 +95,7 @@ export default class ManageEvents extends React.Component {
                 time: this.state.onUpdate.time
             }
         });
-        console.log(this.state.onUpdate);
+        // console.log(this.state.onUpdate);
     }
 
     async updateName(event) {
@@ -104,7 +107,7 @@ export default class ManageEvents extends React.Component {
                 time: this.state.onUpdate.time
             }
         });
-        console.log(this.state.onUpdate);
+        // console.log(this.state.onUpdate);
     }
 
     async getActivityById(id) {
@@ -200,7 +203,8 @@ export default class ManageEvents extends React.Component {
                                                     {obj["name"] !== 'NaN' ?
                                                         (<input type="submit" id={index} value="Update"
                                                                 onClick={this.updateActivity}/>
-                                                        ) : (<input type="submit" id={index} value="Unavailable" style={{background: "rgb(221, 221, 221)"}}
+                                                        ) : (<input type="submit" id={index} value="Unavailable"
+                                                                    style={{background: "rgb(221, 221, 221)"}}
                                                         />)
                                                     }
                                                 </td>

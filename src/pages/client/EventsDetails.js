@@ -48,16 +48,21 @@ export default class EventsDetails extends React.Component {
     }
 
     async componentDidMount() {
-        google = await window.google;
+        await this.getMaps()
         await this.getUserCookie();
         await this.getActivityCookie();
         await this.fetchActivity();
+        
+        await this.calcRoute()
+            .then((result) => this.setState({
+                destination: result
+            })).catch(() => {
+                console.warn("Couldn't retrieve maps...")
+            });
+    }
 
-        // console.log(this.state);
-        await this.calcRoute().then((result) => this.setState({
-            destination: result
-        }));
-        // console.log(google.maps.TransitMode.BUS)
+    async getMaps() {
+        google = await window.google;
     }
 
     async getActivityCookie() {
@@ -78,7 +83,7 @@ export default class EventsDetails extends React.Component {
         const clientCookie = await localStorage.getItem("clientCookie");
 
         const cookie = JSON.parse(clientCookie)
-        console.log(cookie)
+        // console.log(cookie)
         this.setState({
             client: cookie
         })

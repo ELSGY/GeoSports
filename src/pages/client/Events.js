@@ -40,7 +40,7 @@ export default class Events extends React.Component {
                 lng: lng
             }
         })
-        console.log(this.state.coords)
+        // console.log(this.state.coords)
     }
 
     async fetchDefaultActivities() {
@@ -71,7 +71,7 @@ export default class Events extends React.Component {
     }
 
     async buildActivities(response) {
-        console.log(response);
+        // console.log(response);
 
         await this.setState({
             activities: response

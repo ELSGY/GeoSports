@@ -81,7 +81,7 @@ export default class MyEventsDetails extends React.Component {
         const clientCookie = await localStorage.getItem("clientCookie");
 
         const cookie = JSON.parse(clientCookie)
-        console.log(cookie)
+        // console.log(cookie)
         this.setState({
             client: cookie
         })

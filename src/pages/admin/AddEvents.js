@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../App.css';
-import {withGoogleMap, GoogleMap, withScriptjs, InfoWindow, Marker} from "react-google-maps";
+import {GoogleMap, InfoWindow, Marker, withGoogleMap, withScriptjs} from "react-google-maps";
 import Geocode from "react-geocode";
 import Autocomplete from 'react-google-autocomplete';
 import API from "../../API";
@@ -113,7 +113,7 @@ export default class AddEvents extends React.Component {
         API.get(url)
             .then(res => this.buildCategories(res))
             .catch(error => {
-                console.log(error)
+                console.error(error)
             });
     };
 
@@ -129,7 +129,7 @@ export default class AddEvents extends React.Component {
         });
 
         this.setState({categories: categories});
-        console.log(this.state.categories);
+        // console.log(this.state.categories);
     }
 
     getCity(addressArray) {
@@ -249,12 +249,12 @@ export default class AddEvents extends React.Component {
 
     async updateCategory(event) {
 
-        console.log(event);
+        // console.log(event);
 
         const arraySplit = event.target.value.split(",");
 
-        console.log(arraySplit[0])
-        console.log(arraySplit[1])
+        // console.log(arraySplit[0])
+        // console.log(arraySplit[1])
         await this.setState({
             event: {
                 name: this.state.event.name,
@@ -349,7 +349,7 @@ export default class AddEvents extends React.Component {
     async updatePhoto(event) {
         const file = event.target.files[0];
         const resultPhoto = await this.convertFile(file);
-        console.log(resultPhoto);
+        // console.log(resultPhoto);
 
         await this.setState({
             event: {
@@ -366,7 +366,7 @@ export default class AddEvents extends React.Component {
                 photo: resultPhoto
             }
         });
-        console.log(this.state.event.photo);
+        // console.log(this.state.event.photo);
     };
 
     convertFile(file) {
@@ -395,13 +395,13 @@ export default class AddEvents extends React.Component {
             photo: this.state.event.photo
         }
 
-        console.log(activity)
+        // console.log(activity)
 
         const url = "/activity/insertActivity";
         await API.post(url, activity)
             .then(() => alert("Event " + this.state.event.name + " was added!"))
             .catch(error => {
-                console.log(error)
+                console.error(error)
             });
     }
 
