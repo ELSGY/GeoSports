@@ -5,7 +5,6 @@ import Geocode from "react-geocode";
 import Autocomplete from 'react-google-autocomplete';
 import API from "../../API";
 import dateFormat, {masks} from "dateformat";
-import image from "E:\\Faculta\\Proiect Licenta\\FrontEnd\\src\\images\\event.PNG";
 
 Geocode["setApiKey"]("AIzaSyC9-oir9k71wA2xOmZD9d-UNe_2e5Gmtqw");
 Geocode["enableDebug"]();
@@ -48,7 +47,8 @@ export default class AddEvents extends React.Component {
                     subcategories: [
                         ''
                     ]
-                }]
+                }],
+            today: ''
         }
 
         this.addEvent = this.addEvent.bind(this);
@@ -68,6 +68,7 @@ export default class AddEvents extends React.Component {
         this.updateCategory = this.updateCategory.bind(this);
         this.updateParticipants = this.updateParticipants.bind(this);
         this.buildCategories = this.buildCategories.bind(this);
+        this.getToday = this.getToday.bind(this);
     }
 
     componentDidMount() {
@@ -116,6 +117,8 @@ export default class AddEvents extends React.Component {
             .catch(error => {
                 console.error(error)
             });
+
+        this.getToday();
     };
 
     buildCategories(response) {
@@ -406,6 +409,25 @@ export default class AddEvents extends React.Component {
             });
     }
 
+    getToday() {
+        let today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1; //January is 0 so need to add 1 to make it 1!
+        const yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        console.log(yyyy + '-' + mm + '-' + dd);
+        today = "\"" + yyyy + '-' + mm + '-' + dd + "\"";
+
+        this.setState({
+            today: today
+        })
+    }
+
     render() {
         const AsyncMap = withScriptjs(
             withGoogleMap(
@@ -493,6 +515,7 @@ export default class AddEvents extends React.Component {
                             <div className="input">
                                 <label htmlFor="date"><a className={"required"}>*</a>Date</label>
                                 <input type="date" name="name" id="name"
+                                       min={this.state.today}
                                        onChange={this.updateDate} required/>
                             </div>
                             <div className="input">
@@ -501,7 +524,8 @@ export default class AddEvents extends React.Component {
                             </div>
                             <div className="input">
                                 <label htmlFor="nop"><a className={"required"}>*</a>Number of participants</label>
-                                <input type="number" name="name" id="name" onChange={this.updateParticipants} required/>
+                                <input type="number" name="name" id="name" min={1} onChange={this.updateParticipants}
+                                       required/>
                             </div>
                             <div className="input">
                                 <input type="file" onChange={this.updatePhoto}/>

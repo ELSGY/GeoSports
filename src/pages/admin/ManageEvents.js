@@ -238,7 +238,7 @@ export default class ManageEvents extends React.Component {
                                         <input type="time" onChange={this.updateTime}/>
                                     </td>
                                     <td style={{width: '9%'}}>
-                                        <input type="text" placeholder={"Type"}
+                                        <input type="text" placeholder={"No."}
                                                onChange={this.updateParticipants}/>
                                     </td>
                                 </tr>
