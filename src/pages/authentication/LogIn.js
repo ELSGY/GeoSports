@@ -1,7 +1,6 @@
 import React from 'react';
 import '../../App.css';
 import {Link} from "react-router-dom";
-import PopupStatus from "../../components/Utils/PopupStatus";
 import Geocode from "react-geocode";
 
 Geocode["setApiKey"]("AIzaSyC9-oir9k71wA2xOmZD9d-UNe_2e5Gmtqw");
@@ -61,12 +60,11 @@ export default class LogIn extends React.Component {
     }
 
     async loginUser(event) {
-        event.preventDefault()
+        event.preventDefault();
         await fetch("http://localhost:8080/user/getUserByUsername/" + this.state.client.username)
             .then(r => r.json())
             .then(r => this.setUser(r))
             .then(r => {
-                console.log(r);
                 if (r === "user") {
                     this.props.history.push("/user/events")
                 } else if (r === "admin") {
@@ -85,10 +83,7 @@ export default class LogIn extends React.Component {
         const decryptedPassword = await this.decryptPassword(user["password"], user["username"]);
         const username = user["username"];
         const isAdmin = user["isAdmin"];
-        console.log(user)
-
         if (this.state.client.password === decryptedPassword && this.state.client.username === username) {
-
             await this.setState({
                 client: {
                     name: user["name"],
@@ -100,14 +95,11 @@ export default class LogIn extends React.Component {
                 }
             })
             await this.setCookie();
-            alert("Successfully logged in...");
             if (isAdmin === "false") {
                 console.warn("User is logging in...");
-                // this.props.history.push("/user/seeEvents");
                 return "user";
             } else {
                 console.warn("Admin is logging in...");
-                // this.props.history.push("/admin/manageEvents");
                 return "admin";
             }
         } else {
@@ -125,18 +117,14 @@ export default class LogIn extends React.Component {
             lng: this.state.coords.lng,
             address: this.state.coords.address
         }
-        await localStorage.setItem("clientCookie", JSON.stringify(clientCookie));
+        await localStorage.setItem(this.state.client.username, JSON.stringify(clientCookie));
     }
 
     async updateUsername(event) {
         await this.setState({
             client: {
-                name: this.state.client.name,
-                username: event.target.value,
-                email: this.state.client.email,
-                password: this.state.client.password,
-                photo: this.state.client.photo,
-                isAdmin: this.state.client.isAdmin
+                ...this.state.client,
+                username: event.target.value
             }
         });
     }
@@ -144,12 +132,8 @@ export default class LogIn extends React.Component {
     async updatePassword(event) {
         await this.setState({
             client: {
-                name: this.state.client.name,
-                username: this.state.client.username,
-                email: this.state.client.email,
-                password: event.target.value,
-                photo: this.state.client.photo,
-                isAdmin: this.state.client.isAdmin
+                ...this.state.client,
+                password: event.target.value
             }
         });
     }
@@ -161,20 +145,19 @@ export default class LogIn extends React.Component {
     render() {
         return (
             <div>
-                <PopupStatus message={this.state.popupStatusMessage} type={this.state.popupStatusType}/>
                 <div className="background-signin">
                     <main className="box">
                         <h2>Login</h2>
                         <form>
                             <div className="inputBox">
-                                <label htmlFor="userName"><a className={"required"}>*</a>Username</label>
+                                <label htmlFor="userName">Username<a className={"required"}>*</a></label>
                                 <input type="text" name="userName" id="userName"
                                        placeholder="type your username"
                                        onChange={this.updateUsername}
                                        required/>
                             </div>
                             <div className="inputBox">
-                                <label htmlFor="userPassword"><a className={"required"}>*</a>Password</label>
+                                <label htmlFor="userPassword">Password<a className={"required"}>*</a></label>
                                 <input type="password" name="userPassword" id="userPassword"
                                        placeholder="type your password"
                                        onChange={this.updatePassword}

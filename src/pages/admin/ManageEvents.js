@@ -190,7 +190,7 @@ export default class ManageEvents extends React.Component {
             });
         alert("Activity was updated!")
 
-        // window.location.reload(true);
+        window.location.reload(true);
     }
 
     render() {

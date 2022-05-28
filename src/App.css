@@ -189,13 +189,13 @@ input[type=time] {
 }
 
 input[type=file] {
-    width: 100%;
+    /*width: 100%;*/
     padding: 12px 20px;
     margin: 8px 0;
     box-sizing: border-box;
     border: none;
     border-radius: 4px;
-    background-color: #f1f1f1;
+    color: #a0a0a0;
 }
 
 input[type=img] {
@@ -357,6 +357,20 @@ td {
     color: rgba(0, 0, 0, 0.6);
     background-color: rgb(0, 212, 212);
     text-decoration-color: rgb(0, 212, 212);
+    cursor: pointer;
+}
+
+.pastActivities .actLink2 {
+    width: 100%;
+    padding: 10px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    color: rgba(0, 0, 0, 0.6);
+    background-color: rgb(0, 212, 212);
+    text-decoration-color: rgb(0, 212, 212);
+    cursor: pointer;
 }
 
 .actLink3 {
@@ -544,4 +558,8 @@ td {
     cursor: pointer;
 }
 
+.info {
+    padding-bottom: 25px;
+    color: white;
+}
 

@@ -19,7 +19,6 @@ export default class SignUp extends React.Component {
                 photo: '',
                 isAdmin: false
             },
-            refreshed: 1,
             alreadyExistEmail: '',
             alreadyExistUsername: ''
         }
@@ -44,12 +43,8 @@ export default class SignUp extends React.Component {
     async updateName(event) {
         await this.setState({
             client: {
-                name: event.target.value,
-                username: this.state.client.username,
-                email: this.state.client.email,
-                password: this.state.client.password,
-                photo: this.state.client.photo,
-                isAdmin: this.state.client.isAdmin,
+                ...this.state.client,
+                name: event.target.value
             }
         });
     }
@@ -57,12 +52,8 @@ export default class SignUp extends React.Component {
     async updateUsername(event) {
         await this.setState({
             client: {
-                name: this.state.client.name,
-                username: event.target.value,
-                email: this.state.client.email,
-                password: this.state.client.password,
-                photo: this.state.client.photo,
-                isAdmin: this.state.client.isAdmin
+                ...this.state.client,
+                username: event.target.value
             }
         });
     }
@@ -70,12 +61,8 @@ export default class SignUp extends React.Component {
     async updateEmail(event) {
         await this.setState({
             client: {
-                name: this.state.client.name,
-                username: this.state.client.username,
-                email: event.target.value,
-                password: this.state.client.password,
-                photo: this.state.client.photo,
-                isAdmin: this.state.client.isAdmin
+                ...this.state.client,
+                email: event.target.value
             }
         });
     }
@@ -83,12 +70,8 @@ export default class SignUp extends React.Component {
     async updatePassword(event) {
         await this.setState({
             client: {
-                name: this.state.client.name,
-                username: this.state.client.username,
-                email: this.state.client.email,
-                password: event.target.value,
-                photo: this.state.client.photo,
-                isAdmin: this.state.client.isAdmin
+                ...this.state.client,
+                password: event.target.value
             }
         });
     }
@@ -103,17 +86,17 @@ export default class SignUp extends React.Component {
             .then(r => r.json())
             .then(r => this.setState({alreadyExistUsername: r["username"]}))
 
-        console.log(this.state);
+        // console.log(this.state);
 
         if (this.state.alreadyExistEmail.length >= 2 && this.state.alreadyExistUsername.length >= 2) {
-            console.log("Account already exists!")
-            alert("Account already exists!")
+            console.log("Account already exists! Try LOGIN")
+            alert("Account already exists! Try LOGIN")
         } else if (this.state.alreadyExistEmail.length >= 2) {
-            console.log("Account already exists!")
-            alert("This email already exists!")
+            console.log("This email already exists! Try another one")
+            alert("This email already exists! Try another one")
         } else if (this.state.alreadyExistUsername.length >= 2) {
-            console.log("Account already exists!")
-            alert("This username already exists!")
+            console.log("This username already exists! Try another one")
+            alert("This username already exists! Try another one")
         } else {
             const encryptedPassword = this.encryptPassword();
 
@@ -132,12 +115,12 @@ export default class SignUp extends React.Component {
 
             API.post(urlInsert, user)
                 .catch(error => {
-                    console.log(error)
+                    console.error(error)
                 });
 
             fetch("http://localhost:8080/mail/welcome/" + this.state.client.email + "/" + this.state.client.name)
                 .catch(error => {
-                    console.log(error)
+                    console.error(error)
                 });
             alert("Your account was created!")
             this.props.history.push("/user/events");
@@ -154,26 +137,22 @@ export default class SignUp extends React.Component {
             username: this.state.client.username,
             email: this.state.client.email
         }
-        await localStorage.setItem("clientCookie", JSON.stringify(clientCookie));
+        await localStorage.setItem(this.state.client.username, JSON.stringify(clientCookie));
     }
 
     async updatePhoto(event) {
         const file = event.target.files[0];
         const resultPhoto = await this.convertFile(file);
-        console.log(resultPhoto);
+        // console.log(resultPhoto);
 
         await this.setState({
             client: {
-                name: this.state.client.name,
-                username: this.state.client.username,
-                email: this.state.client.email,
-                password: this.state.client.password,
-                photo: resultPhoto,
-                isAdmin: this.state.client.isAdmin
+                ...this.state.client,
+                photo: resultPhoto
             }
         });
-        console.log(this.state);
-    };
+        // console.log(this.state);
+    }
 
     convertFile(file) {
         return new Promise((resolve) => {
@@ -194,31 +173,32 @@ export default class SignUp extends React.Component {
                         <h2>Create account</h2>
                         <form onSubmit={this.registerUser}>
                             <div className="inputBox">
-                                <label htmlFor="userName"><a className={"required"}>*</a>Name</label>
+                                <label htmlFor="userName">Full Name<a className={"required"}>*</a></label>
                                 <input type="text" name="name" id="name" placeholder="type your username"
                                        onChange={this.updateName}
                                        required/>
                             </div>
                             <div className="inputBox">
-                                <label htmlFor="username"><a className={"required"}>*</a>Username</label>
+                                <label htmlFor="username">Username<a className={"required"}>*</a></label>
                                 <input type="text" name="userName" id="userName" placeholder="type your username"
                                        onChange={this.updateUsername}
                                        required/>
                             </div>
                             <div className="inputBox">
-                                <label htmlFor="email"><a className={"required"}>*</a>E-mail</label>
+                                <label htmlFor="email">E-mail<a className={"required"}>*</a></label>
                                 <input type="email" name="userEmail" id="userEmail" placeholder="type your e-mail"
                                        onChange={this.updateEmail}
                                        required/>
                             </div>
                             <div className="inputBox">
-                                <label htmlFor="userPassword"><a className={"required"}>*</a>Password</label>
-                                <input type="password" name="userPassword" id="userPassword"
-                                       placeholder="type your password"
+                                <label htmlFor="userPassword">Password<a className={"required"}>*</a></label>
+                                <input type="password" name="userPassword" id="userPassword" minLength="8"
+                                       placeholder="8 characters minimum"
                                        onChange={this.updatePassword}
                                        required/>
                             </div>
-                            <div>
+                            <div className="inputBox">
+                                <label htmlFor="photo">Photo <i>(opt.)</i></label>
                                 <input type="file" id={"files"} onChange={this.updatePhoto}/>
                             </div>
                             <button type="submit" style={{float: "center"}}>Sign Up

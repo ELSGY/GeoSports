@@ -36,7 +36,8 @@ export default class MyEventsDetails extends React.Component {
                 }
             ],
             destination: '',
-            travelMode: ''
+            travelMode: '',
+            googleMaps: window.google
         }
 
         this.buildActivities = this.buildActivities.bind(this);
@@ -50,7 +51,7 @@ export default class MyEventsDetails extends React.Component {
     }
 
     async componentDidMount() {
-        await this.getMaps()
+        //await this.getMaps()
         await this.getUserCookie();
         await this.getActivityCookie();
         await this.fetchActivity();
@@ -58,18 +59,22 @@ export default class MyEventsDetails extends React.Component {
         // setTimeout(function () {
         //     window.location.reload(1);
         // }, 5000);
-
-        // console.log(this.state);
+        // // console.log(this.state);
         await this.calcRoute()
-            .then((result) => this.setState({
-                destination: result
-            })).catch(() => {
+            .then((result) => {
+                    this.setState({
+                            destination: result
+                        }
+                    )
+                }
+            ).catch(() => {
                 console.warn("Couldn't retrieve maps...")
             });
+
     }
 
     async getMaps() {
-        google = await window.google;
+        this.setState({googleMaps: await window.google})
     }
 
     async getActivityCookie() {
@@ -125,11 +130,14 @@ export default class MyEventsDetails extends React.Component {
     }
 
     async calcRoute() {
-        const directionService = new google.maps.DirectionsService();
+        const directionService = new this.state.googleMaps.maps.DirectionsService();
+        console.log(directionService);
         return directionService.route({
             origin: this.state.client.address,
             destination: this.state.activity.address,
             travelMode: this.state.travelMode
+        }).catch(() => {
+            console.warn("Couldn't find route...")
         });
     }
 
