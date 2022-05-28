@@ -104,10 +104,10 @@ export default class Events extends React.Component {
                                     <h2 className={"noEventsMessage"}>No future events found</h2>
                                 </div>
                                 :
-                                this.state.activities.map((obj, index) => {
+                                this.state.activities.map((obj, key) => {
                                     return (
                                         <div className={"activities"}>
-                                            <div id={obj["name"]} className={"activity"}>
+                                            <div id={obj["name"]} key={key} className={"activity"}>
                                                 <div className={"actColumn"}>
                                                     {obj["photo"].length > 200 ?
                                                         (<img className={"activityImg"}

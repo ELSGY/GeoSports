@@ -71,7 +71,6 @@ export default class PastEvents extends React.Component {
                 lng: cookie.lng
             }
         })
-        // console.log(this.state.client.username)
     }
 
     async buildActivities(response) {

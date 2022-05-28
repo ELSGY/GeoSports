@@ -3,8 +3,6 @@ import {DirectionsRenderer, GoogleMap, withGoogleMap, withScriptjs} from "react-
 import {Link} from "react-router-dom";
 import image from "E:\\Faculta\\Proiect Licenta\\FrontEnd\\src\\images\\event.PNG";
 
-let google;
-
 export default class MyEventsDetails extends React.Component {
 
     constructor(props) {
@@ -35,9 +33,9 @@ export default class MyEventsDetails extends React.Component {
                     enrollCheck: 0
                 }
             ],
-            destination: '',
+            dest: '',
             travelMode: '',
-            googleMaps: window.google
+            google: null
         }
 
         this.buildActivities = this.buildActivities.bind(this);
@@ -51,30 +49,15 @@ export default class MyEventsDetails extends React.Component {
     }
 
     async componentDidMount() {
-        //await this.getMaps()
+        await this.getMaps()
         await this.getUserCookie();
         await this.getActivityCookie();
         await this.fetchActivity();
-
-        // setTimeout(function () {
-        //     window.location.reload(1);
-        // }, 5000);
-        // // console.log(this.state);
-        await this.calcRoute()
-            .then((result) => {
-                    this.setState({
-                            destination: result
-                        }
-                    )
-                }
-            ).catch(() => {
-                console.warn("Couldn't retrieve maps...")
-            });
-
+        await this.calcRoute();
     }
 
     async getMaps() {
-        this.setState({googleMaps: await window.google})
+        this.setState({google: await window.google});
     }
 
     async getActivityCookie() {
@@ -130,14 +113,16 @@ export default class MyEventsDetails extends React.Component {
     }
 
     async calcRoute() {
-        const directionService = new this.state.googleMaps.maps.DirectionsService();
-        console.log(directionService);
-        return directionService.route({
+        const directionService = new this.state.google.maps.DirectionsService();
+
+        directionService.route({
             origin: this.state.client.address,
             destination: this.state.activity.address,
             travelMode: this.state.travelMode
-        }).catch(() => {
-            console.warn("Couldn't find route...")
+        }).then((result) => this.setState({
+            dest: result
+        })).catch(() => {
+            console.warn("Couldn't retrieve maps...")
         });
     }
 
@@ -156,10 +141,13 @@ export default class MyEventsDetails extends React.Component {
                 () => (
                     <GoogleMap
                         zoom={10}
-                        defaultCenter={{lat: this.state.activity.latitude, lng: this.state.activity.longitude}}
+                        defaultCenter={{
+                            lat: parseFloat(this.state.activity.latitude),
+                            lng: parseFloat(this.state.activity.longitude)
+                        }}
                         mapTypeId={'roadmap'}
                     >
-                        <DirectionsRenderer directions={this.state.destination}/>
+                        <DirectionsRenderer directions={this.state.dest}/>
                     </GoogleMap>
                 )
             )
@@ -207,15 +195,15 @@ export default class MyEventsDetails extends React.Component {
                                         <input type="text" name="name" id="name" value={this.state.activity["address"]}
                                                readOnly/>
                                     </div>
-                                    <div className="input">
-                                        <label htmlFor="address">I want to get there by:</label>
-                                        <select className="category" onChange={this.updateTravelMode}>
-                                            <option value={'DRIVING'}>DRIVING</option>
-                                            <option value={'BICYCLING'}>BICYCLING</option>
-                                            <option value={'TRANSIT'}>TRANSIT</option>
-                                            <option value={'WALKING'}>WALKING</option>
-                                        </select>
-                                    </div>
+                                    {/*<div className="input">*/}
+                                    {/*    <label htmlFor="address">I want to get there by:</label>*/}
+                                    {/*    <select className="category" onChange={this.updateTravelMode}>*/}
+                                    {/*        <option value={'DRIVING'}>DRIVING</option>*/}
+                                    {/*        <option value={'BICYCLING'}>BICYCLING</option>*/}
+                                    {/*        <option value={'TRANSIT'}>TRANSIT</option>*/}
+                                    {/*        <option value={'WALKING'}>WALKING</option>*/}
+                                    {/*    </select>*/}
+                                    {/*</div>*/}
                                     <AsyncMap
                                         googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${this.state.API_key}&libraries=places`}
                                         loadingElement={

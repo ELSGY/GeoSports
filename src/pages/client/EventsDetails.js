@@ -13,14 +13,14 @@ export default class EventsDetails extends React.Component {
             client: {
                 username: '',
                 email: '',
-                lat: '',
-                lng: '',
+                lat: 0,
+                lng: 0,
                 address: ''
             },
-            activity: [],
+            activity: {},
             dest: '',
             travelMode: '',
-            google: null
+            objectMaps: null
         }
 
         this.buildActivities = this.buildActivities.bind(this);
@@ -38,23 +38,11 @@ export default class EventsDetails extends React.Component {
         await this.getUserCookie();
         await this.getActivityCookie();
         await this.fetchActivity();
-
-        this.calcRoute()
-            .then((result) => this.setState({
-                destination: result
-            })).catch(() => {
-            console.warn("Couldn't retrieve maps...")
-        });
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.google !== prevState.google) {
-
-        }
+        // await this.calcRoute();
     }
 
     async getMaps() {
-        this.setState({google: await window.google});
+        this.setState({objectMaps: await window.google});
     }
 
     async getActivityCookie() {
@@ -109,11 +97,17 @@ export default class EventsDetails extends React.Component {
     }
 
     async calcRoute() {
-        const directionService = new this.state.google.maps.DirectionsService();
-        return directionService.route({
+        // const maps =;
+        const directionService = new this.state.objectMaps.maps.DirectionsService();
+
+        directionService.route({
             origin: this.state.client.address,
             destination: this.state.activity.address,
             travelMode: this.state.travelMode
+        }).then((result) => this.setState({
+            dest: result
+        })).catch(() => {
+            console.warn("Couldn't retrieve maps...")
         });
     }
 
@@ -130,10 +124,13 @@ export default class EventsDetails extends React.Component {
                 () => (
                     <GoogleMap
                         zoom={10}
-                        defaultCenter={{lat: this.state.activity.latitude, lng: this.state.activity.longitude}}
+                        defaultCenter={{
+                            lat: parseFloat(this.state.activity.latitude),
+                            lng: parseFloat(this.state.activity.longitude)
+                        }}
                         mapTypeId={'roadmap'}
                     >
-                        <DirectionsRenderer directions={(this.state.google === null) ? null : this.state.dest}/>
+                        <DirectionsRenderer directions={this.state.dest}/>
                     </GoogleMap>
                 )
             )
@@ -185,15 +182,15 @@ export default class EventsDetails extends React.Component {
                                         <input type="text" name="name" id="name" value={this.state.activity.address}
                                                readOnly/>
                                     </div>
-                                    <div className="input">
-                                        <label htmlFor="address">I want to get there by:</label>
-                                        <select className="category" onChange={this.updateTravelMode}>
-                                            <option value={'DRIVING'}>DRIVING</option>
-                                            <option value={'BICYCLING'}>BICYCLING</option>
-                                            <option value={'TRANSIT'}>TRANSIT</option>
-                                            <option value={'WALKING'}>WALKING</option>
-                                        </select>
-                                    </div>
+                                    {/*<div className="input">*/}
+                                    {/*    <label htmlFor="address">I want to get there by:</label>*/}
+                                    {/*    <select className="category" onChange={this.updateTravelMode}>*/}
+                                    {/*        <option value={'DRIVING'}>DRIVING</option>*/}
+                                    {/*        <option value={'BICYCLING'}>BICYCLING</option>*/}
+                                    {/*        <option value={'TRANSIT'}>TRANSIT</option>*/}
+                                    {/*        <option value={'WALKING'}>WALKING</option>*/}
+                                    {/*    </select>*/}
+                                    {/*</div>*/}
                                     <AsyncMap
                                         googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${this.state.API_key}&libraries=places`}
                                         loadingElement={
@@ -212,7 +209,6 @@ export default class EventsDetails extends React.Component {
                     </div>
                 </div>
             </div>
-        );
-
+        )
     }
 }
