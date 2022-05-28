@@ -3,8 +3,6 @@ import {DirectionsRenderer, GoogleMap, withGoogleMap, withScriptjs} from "react-
 import {Link} from "react-router-dom";
 import image from "E:\\Faculta\\Proiect Licenta\\FrontEnd\\src\\images\\event.PNG";
 
-let google;
-
 export default class EventsDetails extends React.Component {
 
     constructor(props) {
@@ -20,8 +18,9 @@ export default class EventsDetails extends React.Component {
                 address: ''
             },
             activity: [],
-            destination: '',
-            travelMode: ''
+            dest: '',
+            travelMode: '',
+            google: null
         }
 
         this.buildActivities = this.buildActivities.bind(this);
@@ -40,16 +39,22 @@ export default class EventsDetails extends React.Component {
         await this.getActivityCookie();
         await this.fetchActivity();
 
-        await this.calcRoute()
+        this.calcRoute()
             .then((result) => this.setState({
                 destination: result
             })).catch(() => {
-                console.warn("Couldn't retrieve maps...")
-            });
+            console.warn("Couldn't retrieve maps...")
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.google !== prevState.google) {
+
+        }
     }
 
     async getMaps() {
-        google = await window.google;
+        this.setState({google: await window.google});
     }
 
     async getActivityCookie() {
@@ -100,12 +105,11 @@ export default class EventsDetails extends React.Component {
             .catch(() => {
                 console.warn("E-mail address could not be found...")
             });
-
         window.location.reload();
     }
 
     async calcRoute() {
-        const directionService = new google.maps.DirectionsService();
+        const directionService = new this.state.google.maps.DirectionsService();
         return directionService.route({
             origin: this.state.client.address,
             destination: this.state.activity.address,
@@ -114,9 +118,8 @@ export default class EventsDetails extends React.Component {
     }
 
     async updateTravelMode(e) {
-        // console.log(e.target.value)
         const travelMode = e.target.value;
-        this.setState({
+        await this.setState({
             travelMode: travelMode
         })
     }
@@ -130,7 +133,7 @@ export default class EventsDetails extends React.Component {
                         defaultCenter={{lat: this.state.activity.latitude, lng: this.state.activity.longitude}}
                         mapTypeId={'roadmap'}
                     >
-                        <DirectionsRenderer directions={this.state.destination}/>
+                        <DirectionsRenderer directions={(this.state.google === null) ? null : this.state.dest}/>
                     </GoogleMap>
                 )
             )
@@ -174,12 +177,12 @@ export default class EventsDetails extends React.Component {
                                 <div className={"activityMap"}>
                                     <div className="input">
                                         <label htmlFor="address">🚩 You are here (A):</label>
-                                        <input type="text" name="name" id="name" value={this.state.client["address"]}
+                                        <input type="text" name="name" id="name" value={this.state.client.address}
                                                readOnly/>
                                     </div>
                                     <div className="input">
                                         <label htmlFor="address">🏁 Event takes place at (B):</label>
-                                        <input type="text" name="name" id="name" value={this.state.activity["address"]}
+                                        <input type="text" name="name" id="name" value={this.state.activity.address}
                                                readOnly/>
                                     </div>
                                     <div className="input">

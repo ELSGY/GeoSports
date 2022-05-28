@@ -189,8 +189,16 @@ input[type=time] {
 }
 
 input[type=file] {
-    /*width: 100%;*/
+    width: 100%;
     padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+}
+
+.inputBox[type=file] {
     margin: 8px 0;
     box-sizing: border-box;
     border: none;

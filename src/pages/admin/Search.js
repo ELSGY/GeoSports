@@ -31,11 +31,8 @@ export default class Search extends React.Component {
     }
 
     async setDetails(response) {
-        // console.log(response)
         const image = new Image();
         image.src = response["photo"];
-        // document.body.appendChild(image);
-        // console.log(image.src)
 
         await this.setState({
             client: {
@@ -46,14 +43,12 @@ export default class Search extends React.Component {
             },
             activityName: response["activityName"]
         });
-        // console.log(this.state.client)
     }
 
     async updateCode(event) {
         await this.setState({
             code: event.target.value
         });
-        // console.log(event.target.value)
     }
 
     render() {
@@ -101,12 +96,10 @@ export default class Search extends React.Component {
                                     </div>
                                 ) : null
                             }
-
                         </div>
                     </form>
                 </div>
             </div>
         )
-            ;
     }
 }

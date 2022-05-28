@@ -41,7 +41,6 @@ export default class Events extends React.Component {
                 lng: lng
             }
         })
-        // console.log(this.state.coords)
     }
 
     async fetchDefaultActivities() {
@@ -72,15 +71,12 @@ export default class Events extends React.Component {
     }
 
     async buildActivities(response) {
-        // console.log(response);
-
         await this.setState({
             activities: response
         })
     }
 
     async seeActivityDetails(event) {
-        console.log(event.target.id);
         const activityName = event.target.id;
         await this.setActivityCookie(activityName).then(() => console.warn("Cookie set"));
     }
