@@ -20,12 +20,13 @@ export default class LogIn extends React.Component {
                 photo: '',
                 isAdmin: false
             },
-            path: '',
+            pathname: '',
             coords: {
                 lat: '',
                 lng: '',
                 address: ''
-            }
+            },
+            state: ''
         }
         this.updatePassword = this.updatePassword.bind(this);
         this.decryptPassword = this.decryptPassword.bind(this);
@@ -66,15 +67,18 @@ export default class LogIn extends React.Component {
             .then(r => this.setUser(r))
             .then(r => {
                 if (r === "user") {
-                    this.props.history.push("/user/events")
+                    this.setState({
+                        pathname: '/user/events',
+                        state: this.state.client.username
+                    })
+                    this.props.history.push("/user/events");
+                    // this.props.history.push({});
                 } else if (r === "admin") {
-                    this.props.history.push("/admin/manageEvents")
-                } else {
-                    alert("Invalid credentials...")
+                    this.props.history.push("/admin/manageEvents");
                 }
             })
             .catch(() => {
-                alert("Invalid credentials...")
+                alert("Invalid credentials...");
             });
 
     }
@@ -117,7 +121,7 @@ export default class LogIn extends React.Component {
             lng: this.state.coords.lng,
             address: this.state.coords.address
         }
-        await localStorage.setItem(this.state.client.username, JSON.stringify(clientCookie));
+        await localStorage.setItem("clientCookie", JSON.stringify(clientCookie));
     }
 
     async updateUsername(event) {
@@ -164,9 +168,12 @@ export default class LogIn extends React.Component {
                                        required/>
                             </div>
                             <div className="loginButton">
-                                <Link>
-                                    <button type="submit" name="loginButton"
-                                            onClick={this.loginUser}>Login
+                                <Link to={{
+                                    pathname: this.state.pathname,
+                                    state: this.state.client.username
+                                }}>
+                                    <button type="submit" name="loginButton" onClick={this.loginUser}
+                                    >Login
                                     </button>
                                 </Link>
                             </div>

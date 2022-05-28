@@ -50,7 +50,10 @@ export default class PastEvents extends React.Component {
     async fetchDefaultActivities() {
         await fetch("http://localhost:8080/activity/getEnrolledPastActivitiesForUser/" + this.state.client.username)
             .then(res => res.json())
-            .then(res => this.buildActivities(res));
+            .then(res => this.buildActivities(res))
+            .catch(() => {
+                console.warn("No events available...");
+            });
     }
 
     async getCookie() {

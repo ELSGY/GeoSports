@@ -137,7 +137,7 @@ export default class SignUp extends React.Component {
             username: this.state.client.username,
             email: this.state.client.email
         }
-        await localStorage.setItem(this.state.client.username, JSON.stringify(clientCookie));
+        await localStorage.setItem("clientCookie", JSON.stringify(clientCookie));
     }
 
     async updatePhoto(event) {
