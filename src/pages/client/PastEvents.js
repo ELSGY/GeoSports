@@ -1,5 +1,6 @@
 import React from 'react';
 import {FaStar} from "react-icons/all";
+import image from "E:\\Faculta\\Proiect Licenta\\FrontEnd\\src\\images\\event.PNG";
 
 const colors = {
     orange: "FFBA5A",
@@ -205,10 +206,16 @@ export default class PastEvents extends React.Component {
                                         <div className={"pastActivities"}>
                                             <div className={"activityDetails"}>
                                                 <div className={"actDetailsColumn"}>
-                                                    <img className={"activityDetailsImg2"}
-                                                         src={obj["photo"]}
-                                                         alt={""}
-                                                         key={index1}/>
+                                                    {obj["photo"] !== '' ?
+                                                        <img className={"activityDetailsImg2"}
+                                                             src={obj["photo"]}
+                                                             alt={""}
+                                                             key={index1}/> :
+                                                        <img className={"activityDetailsImg2"}
+                                                             src={image}
+                                                             alt={""}
+                                                             key={index1}/>
+                                                    }
                                                     <div className={"text"}>
                                                         <h2 className={"actDetailsTitle1"}>{obj["name"]}</h2>
                                                         <h3 className={"actDetailsTitle2"}>Location

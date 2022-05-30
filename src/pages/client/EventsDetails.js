@@ -1,7 +1,10 @@
 import React from 'react';
-import {DirectionsRenderer, GoogleMap, withGoogleMap, withScriptjs} from "react-google-maps";
-import {Link} from "react-router-dom";
 import image from "E:\\Faculta\\Proiect Licenta\\FrontEnd\\src\\images\\event.PNG";
+import withGoogleMap from "react-google-maps/lib/withGoogleMap";
+import withScriptjs from "react-google-maps/lib/withScriptjs";
+import GoogleMap from "react-google-maps/lib/components/GoogleMap";
+import DirectionsRenderer from "react-google-maps/lib/components/DirectionsRenderer";
+import {Link} from "react-router-dom";
 
 export default class EventsDetails extends React.Component {
 
@@ -38,7 +41,9 @@ export default class EventsDetails extends React.Component {
         await this.getUserCookie();
         await this.getActivityCookie();
         await this.fetchActivity();
-        // await this.calcRoute();
+        await this.calcRoute().catch(() => {
+            console.warn("Couldn't retrieve maps...")
+        });
     }
 
     async getMaps() {
@@ -115,7 +120,8 @@ export default class EventsDetails extends React.Component {
         const travelMode = e.target.value;
         await this.setState({
             travelMode: travelMode
-        })
+        });
+        await this.calcRoute();
     }
 
     render() {
@@ -123,7 +129,7 @@ export default class EventsDetails extends React.Component {
             withGoogleMap(
                 () => (
                     <GoogleMap
-                        zoom={10}
+                        zoom={12}
                         defaultCenter={{
                             lat: parseFloat(this.state.activity.latitude),
                             lng: parseFloat(this.state.activity.longitude)

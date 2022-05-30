@@ -35,8 +35,8 @@ export default class SignUp extends React.Component {
 
     async componentDidMount() {
         if (localStorage.getItem("clientCookie") !== null) {
-            localStorage.clear();
             window.location.reload(true);
+            localStorage.clear();
         }
     }
 

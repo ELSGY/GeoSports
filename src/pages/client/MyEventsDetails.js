@@ -1,5 +1,8 @@
 import React from 'react';
-import {DirectionsRenderer, GoogleMap, withGoogleMap, withScriptjs} from "react-google-maps";
+import withGoogleMap from "react-google-maps/lib/withGoogleMap";
+import withScriptjs from "react-google-maps/lib/withScriptjs";
+import GoogleMap from "react-google-maps/lib/components/GoogleMap";
+import DirectionsRenderer from "react-google-maps/lib/components/DirectionsRenderer";
 import {Link} from "react-router-dom";
 import image from "E:\\Faculta\\Proiect Licenta\\FrontEnd\\src\\images\\event.PNG";
 
@@ -17,25 +20,10 @@ export default class MyEventsDetails extends React.Component {
                 lng: '',
                 address: ''
             },
-            activity: [
-                {
-                    id: 0,
-                    name: "Nan",
-                    latitude: 0,
-                    longitude: 0,
-                    avbPlaces: 0,
-                    category: "Nan",
-                    subcategory: "Nan",
-                    address: "Nan",
-                    date: "Nan",
-                    time: "Nan",
-                    photo: '',
-                    enrollCheck: 0
-                }
-            ],
+            activity: {},
             dest: '',
             travelMode: '',
-            google: null
+            objectMaps: null
         }
 
         this.buildActivities = this.buildActivities.bind(this);
@@ -49,15 +37,17 @@ export default class MyEventsDetails extends React.Component {
     }
 
     async componentDidMount() {
-        await this.getMaps()
+        await this.getMaps();
         await this.getUserCookie();
         await this.getActivityCookie();
         await this.fetchActivity();
-        await this.calcRoute();
+        await this.calcRoute().catch(() => {
+            console.warn("Couldn't retrieve maps...")
+        });
     }
 
     async getMaps() {
-        this.setState({google: await window.google});
+        this.setState({objectMaps: await window.google});
     }
 
     async getActivityCookie() {
@@ -108,12 +98,12 @@ export default class MyEventsDetails extends React.Component {
             .catch(() => {
                 console.warn("E-mail address could not be found...")
             });
-
         window.location.reload();
     }
 
     async calcRoute() {
-        const directionService = new this.state.google.maps.DirectionsService();
+        // const maps =;
+        const directionService = new this.state.objectMaps.maps.DirectionsService();
 
         directionService.route({
             origin: this.state.client.address,
@@ -131,7 +121,7 @@ export default class MyEventsDetails extends React.Component {
         const travelMode = e.target.value;
         this.setState({
             travelMode: travelMode
-        })
+        });
         await this.calcRoute();
     }
 
@@ -223,6 +213,5 @@ export default class MyEventsDetails extends React.Component {
                 </div>
             </div>
         );
-
     }
 }
