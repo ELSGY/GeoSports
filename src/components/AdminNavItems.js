@@ -12,19 +12,25 @@ export const adminNavItems = [
         cName: "nav-item"
     },
     {
-        id: 3,
+        id: 4,
+        title: "Edit event type",
+        path: "/admin/editType",
+        cName: "nav-item"
+    },
+    {
+        id: 5,
         title: "Add event",
         path: "/admin/addEvents",
         cName: "nav-item"
     },
     {
-        id: 4,
+        id: 6,
         title: "Check user",
         path: "/admin/searchClient",
         cName: "nav-item"
     },
     {
-        id: 5,
+        id: 7,
         title: "Sign out",
         path: "/",
         cName: "nav-item"

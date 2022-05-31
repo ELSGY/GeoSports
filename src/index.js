@@ -12,6 +12,7 @@ ReactDOM.render(
             <Route exact={true} path={"/"} component={SignUp}/>
             <Route exact={true} path={"/login"} component={LogIn}/>
             <Route exact={true} path={"/admin/manageEvents"} component={AdminSearchBar}/>
+            <Route exact={true} path={"/admin/editType"} component={AdminSearchBar}/>
             <Route exact={true} path={"/admin/addEvents"} component={AdminSearchBar}/>
             <Route exact={true} path={"/admin/top"} component={AdminSearchBar}/>
             <Route exact={true} path={"/admin/searchClient"} component={AdminSearchBar}/>

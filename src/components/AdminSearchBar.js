@@ -8,6 +8,7 @@ import AddEvents from "../pages/admin/AddEvents";
 import Search from "../pages/admin/Search";
 import SignUp from "../pages/authentication/SignUp";
 import Top from "../pages/admin/Top";
+import AddType from "../pages/admin/AddType";
 
 export default class AdminSearchBar extends React.Component {
     render() {
@@ -32,6 +33,9 @@ export default class AdminSearchBar extends React.Component {
                     <Switch>
                         <Route exact={true} path="/admin/manageEvents">
                             <ManageEvents/>
+                        </Route>
+                        <Route exact={true} path="/admin/editType">
+                            <AddType/>
                         </Route>
                         <Route exact={true} path="/admin/top">
                             <Top/>

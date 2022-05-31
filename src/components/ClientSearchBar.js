@@ -32,22 +32,22 @@ export default class ClientSearchBar extends React.Component {
                     </nav>
                     <Switch>
                         <Route exact={true} path="/user/events">
-                            <Events/>
+                            <Events username={this.props.history.location.state}/>
                         </Route>
                         <Route exact={true} path="/user/myEvents">
-                            <MyEvents/>
+                            <MyEvents username={this.props.history.location.state}/>
                         </Route>
                         <Route exact={true} path="/user/pastEvents">
-                            <PastEvents/>
+                            <PastEvents username={this.props.history.location.state}/>
                         </Route>
                         <Route exact={true} path="/user/eventsDetails">
-                            <EventsDetails/>
+                            <EventsDetails username={this.props.history.location.state}/>
                         </Route>
                         <Route exact={true} path="/user/myEventsDetails">
-                            <MyEventsDetails/>
+                            <MyEventsDetails username={this.props.history.location.state}/>
                         </Route>
                         <Route exact={true} path="/">
-                            <SignUp/>
+                            <SignUp username={this.props.history.location.state}/>
                         </Route>
                     </Switch>
                 </Router>
