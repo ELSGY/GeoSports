@@ -130,7 +130,7 @@ export default class MyEventsDetails extends React.Component {
             withGoogleMap(
                 () => (
                     <GoogleMap
-                        zoom={10}
+                        zoom={12}
                         defaultCenter={{
                             lat: parseFloat(this.state.activity.latitude),
                             lng: parseFloat(this.state.activity.longitude)

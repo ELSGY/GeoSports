@@ -5,6 +5,7 @@ import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import LogIn from "./pages/authentication/LogIn";
 import AdminSearchBar from "./components/AdminSearchBar";
 import ClientSearchBar from "./components/ClientSearchBar";
+import StartUpSearchBar from "./components/StartUpSearchBar";
 
 ReactDOM.render(
     <Router>

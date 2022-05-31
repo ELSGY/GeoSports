@@ -2,6 +2,7 @@ import React from 'react';
 import '../../App.css';
 import API from "../../API";
 import {Link, Route} from "react-router-dom";
+import * as Icons from "react-icons/fa";
 
 const CryptoJS = require("crypto-js")
 
@@ -77,7 +78,7 @@ export default class SignUp extends React.Component {
     }
 
     async registerUser(e) {
-        e.preventDefault();
+        // e.preventDefault();
         await fetch("http://localhost:8080/user/getUserByEmail/" + this.state.client.email)
             .then(r => r.json())
             .then(r => this.setState({alreadyExistEmail: r["email"]}))
@@ -168,47 +169,55 @@ export default class SignUp extends React.Component {
     render() {
         return (
             <Route>
-                <div className="background-signin">
-                    <main className="box">
-                        <h2>Create account</h2>
-                        <form onSubmit={this.registerUser}>
-                            <div className="inputBox">
-                                <label htmlFor="userName">Full Name<a className={"required"}>*</a></label>
-                                <input type="text" name="name" id="name" placeholder="type your username"
-                                       onChange={this.updateName}
-                                       required/>
+                <div>
+                    <nav className="navbar">
+                        <p className="logo">
+                            GeoSports
+                            <Icons.FaTree/>
+                        </p>
+                    </nav>
+                    <div className="background-signin">
+                        <main className="box" style={{padding: '1rem', margin: '0 auto', maxWidth: 1000}}>
+                            {/*<h2>Create account</h2>*/}
+                            <form onSubmit={this.registerUser}>
+                                <div className="inputBox">
+                                    <label htmlFor="userName">Full Name<a className={"required"}>*</a></label>
+                                    <input type="text" name="name" id="name" placeholder="type your username"
+                                           onChange={this.updateName}
+                                           required/>
+                                </div>
+                                <div className="inputBox">
+                                    <label htmlFor="username">Username<a className={"required"}>*</a></label>
+                                    <input type="text" name="userName" id="userName" placeholder="type your username"
+                                           onChange={this.updateUsername}
+                                           required/>
+                                </div>
+                                <div className="inputBox">
+                                    <label htmlFor="email">E-mail<a className={"required"}>*</a></label>
+                                    <input type="email" name="userEmail" id="userEmail" placeholder="type your e-mail"
+                                           onChange={this.updateEmail}
+                                           required/>
+                                </div>
+                                <div className="inputBox">
+                                    <label htmlFor="userPassword">Password<a className={"required"}>*</a></label>
+                                    <input type="password" name="userPassword" id="userPassword" minLength="8"
+                                           placeholder="8 characters minimum"
+                                           onChange={this.updatePassword}
+                                           required/>
+                                </div>
+                                <div className="inputBox">
+                                    <label htmlFor="photo">Photo <i>(opt.)</i></label>
+                                    <input type="file" id={"files"} onChange={this.updatePhoto}/>
+                                </div>
+                                <button type="submit" style={{float: "center"}}>Sign Up
+                                </button>
+                            </form>
+                            <div>
+                                <p className="login">Already have an account?</p>
+                                <Link className={"linkButton"} to="/login"><p className="login">LOGIN</p></Link>
                             </div>
-                            <div className="inputBox">
-                                <label htmlFor="username">Username<a className={"required"}>*</a></label>
-                                <input type="text" name="userName" id="userName" placeholder="type your username"
-                                       onChange={this.updateUsername}
-                                       required/>
-                            </div>
-                            <div className="inputBox">
-                                <label htmlFor="email">E-mail<a className={"required"}>*</a></label>
-                                <input type="email" name="userEmail" id="userEmail" placeholder="type your e-mail"
-                                       onChange={this.updateEmail}
-                                       required/>
-                            </div>
-                            <div className="inputBox">
-                                <label htmlFor="userPassword">Password<a className={"required"}>*</a></label>
-                                <input type="password" name="userPassword" id="userPassword" minLength="8"
-                                       placeholder="8 characters minimum"
-                                       onChange={this.updatePassword}
-                                       required/>
-                            </div>
-                            <div className="inputBox">
-                                <label htmlFor="photo">Photo <i>(opt.)</i></label>
-                                <input type="file" id={"files"} onChange={this.updatePhoto}/>
-                            </div>
-                            <button type="submit" style={{float: "center"}}>Sign Up
-                            </button>
-                        </form>
-                        <div>
-                            <p className="login">Already have an account?</p>
-                            <Link className={"linkButton"} to="/login"><p className="login">LOGIN</p></Link>
-                        </div>
-                    </main>
+                        </main>
+                    </div>
                 </div>
             </Route>
         );

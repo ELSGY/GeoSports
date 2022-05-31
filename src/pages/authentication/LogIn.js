@@ -2,6 +2,7 @@ import React from 'react';
 import '../../App.css';
 import {Link} from "react-router-dom";
 import Geocode from "react-geocode";
+import * as Icons from "react-icons/fa";
 
 Geocode["setApiKey"]("AIzaSyC9-oir9k71wA2xOmZD9d-UNe_2e5Gmtqw");
 const CryptoJS = require("crypto-js")
@@ -149,9 +150,15 @@ export default class LogIn extends React.Component {
     render() {
         return (
             <div>
+                <nav className="navbar">
+                    <p className="logo">
+                        GeoSports
+                        <Icons.FaTree/>
+                    </p>
+                </nav>
                 <div className="background-signin">
-                    <main className="box">
-                        <h2>Login</h2>
+                    <main className="box" style={{padding: '1rem', margin: '0 auto', maxWidth: 1000}}>
+                        {/*<h2>Login</h2>*/}
                         <form>
                             <div className="inputBox">
                                 <label htmlFor="userName">Username<a className={"required"}>*</a></label>

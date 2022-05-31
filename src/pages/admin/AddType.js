@@ -69,6 +69,10 @@ export default class AddType extends React.Component {
         const result = this.checkExisting();
         if (result === undefined) {
             fetch("http://localhost:8080/categories/addSubcategory/" + this.state.selectedCategory + "/" + this.state.newSubcategory)
+                .then(() => {
+                    alert("Subcategory added!");
+                    window.location.reload(true);
+                })
                 .catch(() => {
                     console.warn("Couldn't insert subcategory...")
                 });
