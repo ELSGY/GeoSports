@@ -78,7 +78,7 @@ export default class SignUp extends React.Component {
     }
 
     async registerUser(e) {
-        // e.preventDefault();
+        e.preventDefault();
         await fetch("http://localhost:8080/user/getUserByEmail/" + this.state.client.email)
             .then(r => r.json())
             .then(r => this.setState({alreadyExistEmail: r["email"]}))

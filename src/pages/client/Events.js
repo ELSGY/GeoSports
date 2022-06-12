@@ -6,7 +6,6 @@ export default class Events extends React.Component {
 
     constructor(props) {
         super(props);
-console.log("am ajuns")
         this.state = {
             client: {
                 username: '',

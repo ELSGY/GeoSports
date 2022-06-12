@@ -219,6 +219,12 @@ export default class AddEvents extends React.Component {
 
         // update state
         this.setState({
+            event: {
+                ...this.state.event,
+                latitude: latValue,
+                longitude: lngValue,
+                address: (address) ? address : ''
+            },
             address: (address) ? address : '',
             area: (area) ? area : '',
             city: (city) ? city : '',
