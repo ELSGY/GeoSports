@@ -338,14 +338,13 @@ export default class AddEvents extends React.Component {
             photo: this.state.event.photo
         }
 
-        // console.log(activity)
-
         const url = "/activity/insertActivity";
-        await API.post(url, activity)
-            .then(() => alert("Event " + this.state.event.name + " was added!"))
+        API.post(url, activity)
             .catch(error => {
                 console.error(error)
             });
+
+        alert("Event " + this.state.event.name + " was added!");
     }
 
     getToday() {

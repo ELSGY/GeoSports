@@ -14,8 +14,8 @@ export default class ManageEvents extends React.Component {
                 avbPlaces: "",
                 date: "",
                 time: "",
-                lat: 0.0,
-                lng: 0.0
+                lat: "",
+                lng: ""
             }
         }
 
@@ -60,7 +60,7 @@ export default class ManageEvents extends React.Component {
             this.setState({
                 activities: activities
             })
-            console.log(this.state.activities);
+            // console.log(this.state.activities);
         }
     }
 
@@ -182,7 +182,7 @@ export default class ManageEvents extends React.Component {
             activity['lng'] = updatedLng;
         }
 
-        console.log(activity);
+        // console.log(activity);
 
         fetch("http://localhost:8080/activity/updateActivity/" + activity.name + "/" + activity.address + "/" + activity.date + "/" + activity.time + "/" + activity.avbPlaces + "/" + activity.id + "/" + activity.lat + "/" + activity.lng)
             .catch(error => {
