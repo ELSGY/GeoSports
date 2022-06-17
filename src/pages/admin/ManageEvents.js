@@ -10,12 +10,12 @@ export default class ManageEvents extends React.Component {
             activities: [],
             onUpdate: {
                 name: "",
-                address: '',
+                address: "",
                 avbPlaces: "",
                 date: "",
                 time: "",
-                lat: "",
-                lng: ""
+                lat: 0,
+                lng: 0
             }
         }
 
@@ -149,8 +149,10 @@ export default class ManageEvents extends React.Component {
     }
 
     async updateActivity(event) {
+
         const index = event.target.id;
         const activity = this.state.activities[index];
+        console.log(activity)
 
         const updatedName = this.state.onUpdate.name;
         const updatedAddress = this.state.onUpdate.address;
@@ -175,22 +177,23 @@ export default class ManageEvents extends React.Component {
         if (updatedPlaces !== "") {
             activity['avbPlaces'] = updatedPlaces;
         }
-        if (updatedLat !== "") {
-            activity['lat'] = updatedLat;
+        if (updatedLat !== 0) {
+            activity['latitude'] = updatedLat;
         }
-        if (updatedLng !== "") {
-            activity['lng'] = updatedLng;
+        if (updatedLng !== 0) {
+            activity['longitude'] = updatedLng;
         }
 
         // console.log(activity);
 
-        fetch("http://localhost:8080/activity/updateActivity/" + activity.name + "/" + activity.address + "/" + activity.date + "/" + activity.time + "/" + activity.avbPlaces + "/" + activity.id + "/" + activity.lat + "/" + activity.lng)
+        fetch("http://localhost:8080/activity/updateActivity/" + activity.name + "/" + activity.address + "/" + activity.date + "/" + activity.time + "/" + activity.avbPlaces + "/" + activity.id + "/" + activity.latitude + "/" + activity.longitude)
             .catch(error => {
                 console.log(error)
             });
         alert("Activity was updated!")
 
-        window.location.reload(true);
+        // window.location.reload(true);
+        event.preventDefault()
     }
 
     render() {

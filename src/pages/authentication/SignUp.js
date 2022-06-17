@@ -3,6 +3,7 @@ import '../../App.css';
 import API from "../../API";
 import {Link, Route} from "react-router-dom";
 import * as Icons from "react-icons/fa";
+import Geocode from "react-geocode";
 
 const CryptoJS = require("crypto-js")
 
@@ -21,7 +22,12 @@ export default class SignUp extends React.Component {
                 isAdmin: false
             },
             alreadyExistEmail: '',
-            alreadyExistUsername: ''
+            alreadyExistUsername: '',
+            coords: {
+                lat: '',
+                lng: '',
+                address: ''
+            }
         }
 
         this.updateName = this.updateName.bind(this);
@@ -38,6 +44,26 @@ export default class SignUp extends React.Component {
         if (localStorage.getItem("clientCookie") !== null) {
             window.location.reload(true);
             localStorage.clear();
+        }
+        if (navigator.geolocation) {
+            await navigator.geolocation.getCurrentPosition(position => {
+                    Geocode["fromLatLng"](position.coords.latitude, position.coords.longitude).then(
+                        response => {
+                            const address = response.results[0]["formatted_address"];
+                            this.setState({
+                                coords: {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude,
+                                    address: (address) ? address : ''
+                                }
+                            })
+                        },
+                        error => {
+                            console.error(error);
+                        }
+                    );
+                }
+            )
         }
     }
 
@@ -136,7 +162,10 @@ export default class SignUp extends React.Component {
         // set cookie from config file
         const clientCookie = {
             username: this.state.client.username,
-            email: this.state.client.email
+            email: this.state.client.email,
+            lat: this.state.coords.lat,
+            lng: this.state.coords.lng,
+            address: this.state.coords.address
         }
         await localStorage.setItem("clientCookie", JSON.stringify(clientCookie));
     }
