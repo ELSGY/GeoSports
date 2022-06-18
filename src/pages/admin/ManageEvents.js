@@ -149,7 +149,6 @@ export default class ManageEvents extends React.Component {
     }
 
     async updateActivity(event) {
-
         const index = event.target.id;
         const activity = this.state.activities[index];
         console.log(activity)
@@ -184,16 +183,12 @@ export default class ManageEvents extends React.Component {
             activity['longitude'] = updatedLng;
         }
 
-        // console.log(activity);
-
         fetch("http://localhost:8080/activity/updateActivity/" + activity.name + "/" + activity.address + "/" + activity.date + "/" + activity.time + "/" + activity.avbPlaces + "/" + activity.id + "/" + activity.latitude + "/" + activity.longitude)
             .catch(error => {
                 console.log(error)
             });
         alert("Activity was updated!")
-
-        // window.location.reload(true);
-        event.preventDefault()
+        window.location.reload(true);
     }
 
     render() {
